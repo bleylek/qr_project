@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:qrproject/pages/pricing.dart';
 
 import 'home_page.dart'; // Simge kullanmak için FontAwesome
 
@@ -43,19 +44,20 @@ class FeaturesPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FeaturesPage()), // FeaturesPage'e yönlendir
-                  );
+
                 },
                 child: Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
+
               TextButton(
                 onPressed: () {
-                  // Fiyatlandırma sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PricingPage()),
+                  );
                 },
                 child: Text(
                   "Fiyatlandırma",

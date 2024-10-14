@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/pricing.dart';
 
 import 'features.dart';
+import 'home_page.dart';
 
-class HomePage extends StatelessWidget {
+class PricingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,14 +12,14 @@ class HomePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.purpleAccent],
+              colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
           ),
           child: AppBar(
-            backgroundColor: Colors.transparent, // Background rengini transparan yapıyoruz
-            elevation: 0, // Gölgeyi kaldırıyoruz
+            backgroundColor: Colors.transparent,
+            elevation: 0,
             title: Text(
               "QR Menü",
               style: TextStyle(
@@ -31,7 +31,10 @@ class HomePage extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () {
-                  // Referanslar sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()), // FeaturesPage'e yönlendir
+                  );
                 },
                 child: Text(
                   "Ana Sayfa",
@@ -53,10 +56,7 @@ class HomePage extends StatelessWidget {
 
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PricingPage()),
-                  );
+
                 },
                 child: Text(
                   "Fiyatlandırma",
@@ -110,53 +110,106 @@ class HomePage extends StatelessWidget {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
+            colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "QR Menü ile Kolay Sipariş",
+                "Fiyatlandırma Planlarımız",
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 16),
-              Text(
-                "Menülerimize kolayca ulaşın ve sipariş verin.",
-                style: TextStyle(fontSize: 16, color: Colors.white70),
-              ),
-              SizedBox(height: 32),
-              // QR Kodu (Geçici Görsel Yer Tutucu)
-              Container(
-                height: 200,
-                width: 200,
-                color: Colors.white,
-                child: Center(child: Text("QR Kodu Buraya")),
-              ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  // Menüyü İncele sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    PricingCard(
+                      imagePath: 'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu
+                      title: "6 Aylık Plan",
+                      price: "660 ₺",
+                      description: "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+                    ),
+                    PricingCard(
+                      imagePath: 'lib/images/pexels-pixabay-278430.jpg', // Aynı resim ya da farklı bir resim kullanılabilir
+                      title: "12 Aylık Plan",
+                      price: "1200 ₺",
+                      description: "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                    ),
+                  ],
                 ),
-                child: Text("Menüleri İncele"),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PricingCard extends StatelessWidget {
+  final String imagePath;
+  final String title;
+  final String price;
+  final String description;
+
+  PricingCard({
+    required this.imagePath,
+    required this.title,
+    required this.price,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white.withOpacity(0.9),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath,
+              height: 160, // 300x160 oranını sağlamak için
+              width: double.infinity,
+              fit: BoxFit.cover, // Resmin tamamının görünmesi için
+            ),
+            SizedBox(height: 16),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              price,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.blueAccent,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              description,
+              style: TextStyle(fontSize: 14, color: Colors.black54),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
