@@ -28,6 +28,7 @@ class HomePage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            automaticallyImplyLeading: false,
             actions: [
               TextButton(
                 onPressed: () {

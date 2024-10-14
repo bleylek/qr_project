@@ -12,7 +12,7 @@ class PricingPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
+              colors: [Colors.blueAccent, Colors.purpleAccent],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -28,6 +28,7 @@ class PricingPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            automaticallyImplyLeading: false,
             actions: [
               TextButton(
                 onPressed: () {
@@ -110,7 +111,7 @@ class PricingPage extends StatelessWidget {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
+            colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

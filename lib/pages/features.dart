@@ -29,6 +29,7 @@ class FeaturesPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            automaticallyImplyLeading: false,
             actions: [
               TextButton(
                 onPressed: () {
@@ -46,7 +47,7 @@ class FeaturesPage extends StatelessWidget {
                 onPressed: () {
 
                 },
-                child: Text(
+                child: const Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -59,7 +60,7 @@ class FeaturesPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => PricingPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Fiyatlandırma",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -68,7 +69,7 @@ class FeaturesPage extends StatelessWidget {
                 onPressed: () {
                   // Referanslar sayfasına yönlendir
                 },
-                child: Text(
+                child: const Text(
                   "Referanslar",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -133,7 +134,23 @@ class FeaturesPage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
+                    Container(
+                      height: 300,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(44, 0, 0, 0),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2), // Gölge rengi ve opaklığı
+                            spreadRadius: 5, // Gölgenin yayılma miktarı
+                            blurRadius: 10, // Gölgenin bulanıklık miktarı
+                            offset: Offset(4, 4), // Gölgenin x ve y yönlerinde kaydırılması
+                          ),
+                        ],
+                      ),
+                    ),
 
+/*
                     FeatureCard(
 
                       icon: FontAwesomeIcons.qrcode,
@@ -166,6 +183,7 @@ class FeaturesPage extends StatelessWidget {
                       description:
                       "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
                     ),
+                    */
                   ],
                 ),
               ),
