@@ -1,11 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qrproject/pages/pricing.dart';
-import 'package:qrproject/pages/references.dart';
 
-import 'home_page.dart'; // Simge kullanmak için FontAwesome
+import 'features.dart';
+import 'home_page.dart';
 
-class FeaturesPage extends StatelessWidget {
+class ReferencesPage extends StatefulWidget {
+  @override
+  _ReferencesPageState createState() => _ReferencesPageState();
+}
+
+class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Animasyon Kontrolcüsü
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1), // Animasyonun süresi
+      vsync: this,
+    );
+
+    // SlideTransition için Offset Animasyonu
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 1.0), // Başlangıç noktası (aşağıdan yukarıya)
+      end: Offset.zero, // Son nokta (yerinde sabit)
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut, // Yumuşak geçiş
+    ));
+
+    // Animasyonu başlatıyoruz
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +50,7 @@ class FeaturesPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.purpleAccent],
+              colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -30,7 +66,6 @@ class FeaturesPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            automaticallyImplyLeading: false,
             actions: [
               TextButton(
                 onPressed: () {
@@ -46,9 +81,12 @@ class FeaturesPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FeaturesPage()), // FeaturesPage'e yönlendir
+                  );
                 },
-                child: const Text(
+                child: Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -61,17 +99,14 @@ class FeaturesPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => PricingPage()),
                   );
                 },
-                child: const Text(
+                child: Text(
                   "Fiyatlandırma",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
-                  );
+                  // Referanslar sayfasına yönlendir (bu sayfa)
                 },
                 child: Text(
                   "Referanslar",
@@ -116,7 +151,7 @@ class FeaturesPage extends StatelessWidget {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
+            colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -127,7 +162,7 @@ class FeaturesPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Uygulamamızın Temel Özellikleri",
+                "Referanslarımız",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -138,56 +173,30 @@ class FeaturesPage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(44, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2), // Gölge rengi ve opaklığı
-                            spreadRadius: 5, // Gölgenin yayılma miktarı
-                            blurRadius: 10, // Gölgenin bulanıklık miktarı
-                            offset: Offset(4, 4), // Gölgenin x ve y yönlerinde kaydırılması
-                          ),
-                        ],
+                    SlideTransition(
+                      position: _offsetAnimation,
+                      child: ReferenceCard(
+                        name: "Restoran A",
+                        description: "Türkiye'nin en ünlü restoranlarından biri.",
+                        imageUrl: 'https://via.placeholder.com/300x160', // Görselin URL'si
                       ),
                     ),
-
-/*
-                    FeatureCard(
-
-                      icon: FontAwesomeIcons.qrcode,
-                      title: "Kolay QR Kod",
-                      description:
-                      "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
-
+                    SlideTransition(
+                      position: _offsetAnimation,
+                      child: ReferenceCard(
+                        name: "Kafe B",
+                        description: "En çok tercih edilen kafelerden biri.",
+                        imageUrl: 'https://via.placeholder.com/300x160', // Görselin URL'si
+                      ),
                     ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.mobileAlt,
-                      title: "Mobil Uyumluluk",
-                      description:
-                      "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
+                    SlideTransition(
+                      position: _offsetAnimation,
+                      child: ReferenceCard(
+                        name: "Otel C",
+                        description: "Müşteri memnuniyeti yüksek otellerden biri.",
+                        imageUrl: 'https://via.placeholder.com/300x160', // Görselin URL'si
+                      ),
                     ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.lock,
-                      title: "Güvenli Altyapı",
-                      description:
-                      "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.chartLine,
-                      title: "Analiz ve Raporlama",
-                      description:
-                      "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.cogs,
-                      title: "Kullanıcı Dostu Yönetim",
-                      description:
-                      "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
-                    ),
-                    */
                   ],
                 ),
               ),
@@ -199,53 +208,48 @@ class FeaturesPage extends StatelessWidget {
   }
 }
 
-class FeatureCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
+class ReferenceCard extends StatelessWidget {
+  final String name;
   final String description;
+  final String imageUrl;
 
-  FeatureCard({required this.icon, required this.title, required this.description});
+  ReferenceCard({
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white.withOpacity(0.8),
+      color: Colors.white.withOpacity(0.9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.blueAccent.withOpacity(0.8),
-              child: FaIcon(
-                icon,
-                color: Colors.white,
-                size: 30,
+            Image.network(
+              imageUrl,
+              height: 160,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 16),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
             ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    description,
-                    style: TextStyle(fontSize: 14, color: Colors.black54),
-                  ),
-                ],
-              ),
+            SizedBox(height: 8),
+            Text(
+              description,
+              style: TextStyle(fontSize: 14, color: Colors.black54),
             ),
           ],
         ),

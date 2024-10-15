@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrproject/pages/pricing.dart';
+import 'package:qrproject/pages/references.dart';
 
 import 'features.dart';
 
@@ -66,7 +67,10 @@ class HomePage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  // Referanslar sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReferencesPage()),
+                  );
                 },
                 child: Text(
                   "Referanslar",
