@@ -3,6 +3,7 @@ import 'package:qrproject/pages/pricing.dart';
 import 'package:qrproject/pages/references.dart';
 
 import 'features.dart';
+import 'login_signup.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -80,7 +81,10 @@ class HomePage extends StatelessWidget {
               SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Giriş sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AuthPage()), // AuthPage'e yönlendir (giriş/kaydol sayfası)
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -91,10 +95,14 @@ class HomePage extends StatelessWidget {
                 ),
                 child: Text("Giriş Yap"),
               ),
+
               SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
-                  // Kayıt ol sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AuthPage()), // AuthPage'e yönlendir (giriş/kaydol sayfası)
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

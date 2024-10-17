@@ -50,7 +50,7 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
+              colors: [Colors.blueAccent, Colors.purpleAccent],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -71,7 +71,7 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()), // FeaturesPage'e yönlendir
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 child: Text(
@@ -151,7 +151,7 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromRGBO(0, 122, 255, 1), Color.fromRGBO(155, 89, 182, 1)],
+            colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
