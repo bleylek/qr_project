@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/home_page.dart';
-import 'package:qrproject/pages/pricing.dart';
-import 'package:qrproject/pages/references.dart';
+import 'package:qrproject/pages/anasayfa/home_page.dart';
+import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
+import 'package:qrproject/pages/referanslar/references.dart';
 import 'package:qrproject/services/auth_service.dart'; // AuthService import
 import 'forgot_password.dart';
 import 'logut.dart'; // LogoutPage'i import edin
@@ -90,7 +90,8 @@ class _AuthPageState extends State<AuthPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const ReferencesPage()),
                   );
                 },
                 child: const Text(
@@ -215,7 +216,7 @@ class LoginPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
                 );
               },
-              child: Text(
+              child: const Text(
                 "Şifreni mi unuttun?",
                 style: TextStyle(color: Colors.white),
               ),
@@ -232,7 +233,7 @@ class LoginPage extends StatelessWidget {
                   // Giriş başarılıysa LogoutPage'e yönlendirme
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LogoutPage()),
+                    MaterialPageRoute(builder: (context) => const LogoutPage()),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

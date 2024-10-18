@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:qrproject/firebase_options.dart';
-import 'package:qrproject/pages/home_page.dart';
+import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/login_signup.dart'; // AuthPage'i import edin
 
 void main() async {

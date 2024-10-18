@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/references.dart';
-
-import 'features.dart';
-import 'home_page.dart';
+import 'package:qrproject/widgets/appBar.dart';
 
 class PricingPage extends StatelessWidget {
   const PricingPage({super.key});
@@ -20,96 +17,8 @@ class PricingPage extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: const Text(
-              "QR Menü",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            automaticallyImplyLeading: false,
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const HomePage()), // FeaturesPage'e yönlendir
-                  );
-                },
-                child: const Text(
-                  "Ana Sayfa",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const FeaturesPage()), // FeaturesPage'e yönlendir
-                  );
-                },
-                child: const Text(
-                  "Özellikler",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Fiyatlandırma",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
-                  );
-                },
-                child: const Text(
-                  "Referanslar",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Giriş sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Giriş Yap"),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () {
-                  // Kayıt ol sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Kayıt Ol"),
-              ),
-              const SizedBox(width: 16),
-            ],
+          child: const Appbar(
+            currentPage: "pricing_page",
           ),
         ),
       ),
@@ -139,7 +48,7 @@ class PricingPage extends StatelessWidget {
               const SizedBox(height: 16),
               Expanded(
                 child: ListView(
-                  children: [
+                  children: const [
                     PricingCard(
                       imagePath:
                           'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu

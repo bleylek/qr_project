@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qrproject/pages/pricing.dart';
-import 'package:qrproject/pages/references.dart';
-
-import 'home_page.dart'; // Simge kullanmak için FontAwesome
+import 'package:qrproject/widgets/appBar.dart';
 
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
@@ -21,94 +18,8 @@ class FeaturesPage extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: const Text(
-              "QR Menü",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            automaticallyImplyLeading: false,
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            HomePage()), // FeaturesPage'e yönlendir
-                  );
-                },
-                child: const Text(
-                  "Ana Sayfa",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Özellikler",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PricingPage()),
-                  );
-                },
-                child: const Text(
-                  "Fiyatlandırma",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
-                  );
-                },
-                child: const Text(
-                  "Referanslar",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Giriş sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Giriş Yap"),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () {
-                  // Kayıt ol sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Kayıt Ol"),
-              ),
-              const SizedBox(width: 16),
-            ],
+          child: const Appbar(
+            currentPage: "features_page",
           ),
         ),
       ),
