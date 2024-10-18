@@ -8,8 +8,8 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.black54,
+      decoration: BoxDecoration(
+        color: Colors.purple[800],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

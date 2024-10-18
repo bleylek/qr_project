@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/HomePage', // Başlangıç route (Giriş/Kayıt sayfası)
+      initialRoute: '/', // Başlangıç route (Giriş/Kayıt sayfası)
       routes: {
         '/': (context) => const HomePage(), // Ana Sayfa
         '/auth': (context) => const AuthPage(), // Giriş/Kayıt Sayfası
