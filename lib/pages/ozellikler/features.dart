@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qrproject/widgets/appBar.dart';
+import 'package:qrproject/pages/pricing.dart';
+import 'package:qrproject/pages/references.dart';
+
+import 'home_page.dart'; // Simge kullanmak için FontAwesome
 
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
@@ -18,96 +21,184 @@ class FeaturesPage extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
           ),
-          child: const Appbar(
-            currentPage: "features_page",
-          ),
-        ),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Uygulamamızın Temel Özellikleri",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text(
+              "QR Menü",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            automaticallyImplyLeading: false,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            HomePage()), // FeaturesPage'e yönlendir
+                  );
+                },
+                child: const Text(
+                  "Ana Sayfa",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  children: [
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(44, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black
-                                .withOpacity(0.2), // Gölge rengi ve opaklığı
-                            spreadRadius: 5, // Gölgenin yayılma miktarı
-                            blurRadius: 10, // Gölgenin bulanıklık miktarı
-                            offset: const Offset(4,
-                                4), // Gölgenin x ve y yönlerinde kaydırılması
-                          ),
-                        ],
-                      ),
-                    ),
-
-/*
-                    FeatureCard(
-
-                      icon: FontAwesomeIcons.qrcode,
-                      title: "Kolay QR Kod",
-                      description:
-                      "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
-
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.mobileAlt,
-                      title: "Mobil Uyumluluk",
-                      description:
-                      "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.lock,
-                      title: "Güvenli Altyapı",
-                      description:
-                      "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.chartLine,
-                      title: "Analiz ve Raporlama",
-                      description:
-                      "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.cogs,
-                      title: "Kullanıcı Dostu Yönetim",
-                      description:
-                      "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
-                    ),
-                    */
-                  ],
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  "Özellikler",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PricingPage()),
+                  );
+                },
+                child: const Text(
+                  "Fiyatlandırma",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReferencesPage()),
+                  );
+                },
+                child: const Text(
+                  "Referanslar",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Giriş sayfasına yönlendir
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text("Giriş Yap"),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () {
+                  // Kayıt ol sayfasına yönlendir
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text("Kayıt Ol"),
+              ),
+              const SizedBox(width: 16),
             ],
           ),
         ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blueAccent, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Uygulamamızın Temel Özellikleri",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          Container(
+                            height: 300,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(44, 0, 0, 0),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 5,
+                                  blurRadius: 10,
+                                  offset: const Offset(4, 4),
+                                ),
+                              ],
+                            ),
+                          ),
+                          /*
+                          FeatureCard(
+                            icon: FontAwesomeIcons.qrcode,
+                            title: "Kolay QR Kod",
+                            description:
+                            "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.mobileAlt,
+                            title: "Mobil Uyumluluk",
+                            description:
+                            "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.lock,
+                            title: "Güvenli Altyapı",
+                            description:
+                            "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.chartLine,
+                            title: "Analiz ve Raporlama",
+                            description:
+                            "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.cogs,
+                            title: "Kullanıcı Dostu Yönetim",
+                            description:
+                            "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
+                          ),
+                          */
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const Footer(), // Footer'ı burada ekliyoruz
+        ],
       ),
     );
   }

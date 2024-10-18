@@ -1,17 +1,36 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:math';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class AuthService {
-  // Email ve şifre ile kayıt
+  // Rastgele doğrulama kodu oluşturma
+  String generateVerificationCode() {
+    var rng = Random();
+    return (rng.nextInt(900000) + 100000).toString(); // 6 haneli kod
+  }
+
+  // Kayıt ve doğrulama kodu gönderme
   Future<bool> signup({
     required String email,
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // Firebase ile kullanıcı kaydı oluştur
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Doğrulama kodunu oluştur
+      String verificationCode = generateVerificationCode();
+
+      // Doğrulama kodunu e-posta ile gönder
+      await sendVerificationEmail(email, verificationCode);
+
+      // Kullanıcıdan doğrulama kodunu girmesini isteyin
+      // Firebase User'ı doğrulama yapılana kadar bekletin
+
       return true; // Başarılı kayıt
     } on FirebaseAuthException catch (e) {
       String message = "";
@@ -24,7 +43,24 @@ class AuthService {
       return false; // Başarısız kayıt
     } catch (e) {
       print(e.toString());
-      return false;
+      return false; // Genel hata
+    }
+  }
+
+  // Doğrulama kodunu e-posta ile gönderme
+  Future<void> sendVerificationEmail(String email, String verificationCode) async {
+    final Email emailToSend = Email(
+      body: 'Doğrulama kodunuz: $verificationCode',
+      subject: 'E-posta Doğrulama',
+      recipients: [email],
+      isHTML: false,
+    );
+
+    try {
+      await FlutterEmailSender.send(emailToSend);
+      print("Doğrulama kodu e-posta ile gönderildi");
+    } catch (e) {
+      print("E-posta gönderme hatası: $e");
     }
   }
 
@@ -78,7 +114,7 @@ class AuthService {
     }
   }
 
-  // Şifre sıfırlama e-postası gönderme methodu
+  // Şifre sıfırlama e-postası gönderme
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
