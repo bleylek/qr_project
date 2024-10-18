@@ -3,6 +3,7 @@ import 'package:qrproject/pages/pricing.dart';
 
 import 'features.dart';
 import 'home_page.dart';
+import '../widgets/footer.dart'; // Footer import
 
 class ReferencesPage extends StatefulWidget {
   const ReferencesPage({super.key});
@@ -88,7 +89,7 @@ class _ReferencesPageState extends State<ReferencesPage>
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const FeaturesPage()), // FeaturesPage'e yönlendir
+                        const FeaturesPage()), // FeaturesPage'e yönlendir
                   );
                 },
                 child: const Text(
@@ -151,68 +152,76 @@ class _ReferencesPageState extends State<ReferencesPage>
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Referanslarımız",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blueAccent, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SlideTransition(
-                      position: _offsetAnimation,
-                      child: const ReferenceCard(
-                        name: "Restoran A",
-                        description:
-                            "Türkiye'nin en ünlü restoranlarından biri.",
-                        imageUrl:
-                            'https://via.placeholder.com/300x160', // Görselin URL'si
+                    const Text(
+                      "Referanslarımız",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SlideTransition(
-                      position: _offsetAnimation,
-                      child: const ReferenceCard(
-                        name: "Kafe B",
-                        description: "En çok tercih edilen kafelerden biri.",
-                        imageUrl:
-                            'https://via.placeholder.com/300x160', // Görselin URL'si
-                      ),
-                    ),
-                    SlideTransition(
-                      position: _offsetAnimation,
-                      child: const ReferenceCard(
-                        name: "Otel C",
-                        description:
-                            "Müşteri memnuniyeti yüksek otellerden biri.",
-                        imageUrl:
-                            'https://via.placeholder.com/300x160', // Görselin URL'si
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          SlideTransition(
+                            position: _offsetAnimation,
+                            child: const ReferenceCard(
+                              name: "Restoran A",
+                              description:
+                              "Türkiye'nin en ünlü restoranlarından biri.",
+                              imageUrl:
+                              'https://via.placeholder.com/300x160', // Görselin URL'si
+                            ),
+                          ),
+                          SlideTransition(
+                            position: _offsetAnimation,
+                            child: const ReferenceCard(
+                              name: "Kafe B",
+                              description:
+                              "En çok tercih edilen kafelerden biri.",
+                              imageUrl:
+                              'https://via.placeholder.com/300x160', // Görselin URL'si
+                            ),
+                          ),
+                          SlideTransition(
+                            position: _offsetAnimation,
+                            child: const ReferenceCard(
+                              name: "Otel C",
+                              description:
+                              "Müşteri memnuniyeti yüksek otellerden biri.",
+                              imageUrl:
+                              'https://via.placeholder.com/300x160', // Görselin URL'si
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          const Footer(),
+        ],
       ),
     );
   }

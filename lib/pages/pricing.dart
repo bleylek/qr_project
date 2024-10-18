@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrproject/pages/references.dart';
+import '../widgets/footer.dart'; // Footer import
 
 import 'features.dart';
 import 'home_page.dart';
@@ -39,7 +40,7 @@ class PricingPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const HomePage()), // FeaturesPage'e yönlendir
+                        const HomePage()), // HomePage'e yönlendir
                   );
                 },
                 child: const Text(
@@ -53,7 +54,7 @@ class PricingPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const FeaturesPage()), // FeaturesPage'e yönlendir
+                        const FeaturesPage()), // FeaturesPage'e yönlendir
                   );
                 },
                 child: const Text(
@@ -113,55 +114,62 @@ class PricingPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Fiyatlandırma Planlarımız",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blueAccent, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    PricingCard(
-                      imagePath:
-                          'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu
-                      title: "6 Aylık Plan",
-                      price: "660 ₺",
-                      description:
-                          "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+                    const Text(
+                      "Fiyatlandırma Planlarımız",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    PricingCard(
-                      imagePath:
-                          'lib/images/pexels-pixabay-278430.jpg', // Aynı resim ya da farklı bir resim kullanılabilir
-                      title: "12 Aylık Plan",
-                      price: "1200 ₺",
-                      description:
-                          "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          PricingCard(
+                            imagePath:
+                            'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu
+                            title: "6 Aylık Plan",
+                            price: "660 ₺",
+                            description:
+                            "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+                          ),
+                          PricingCard(
+                            imagePath:
+                            'lib/images/pexels-pixabay-278430.jpg', // Aynı resim ya da farklı bir resim kullanılabilir
+                            title: "12 Aylık Plan",
+                            price: "1200 ₺",
+                            description:
+                            "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          const Footer(), // Footer'ı burada ekliyoruz
+        ],
       ),
     );
   }

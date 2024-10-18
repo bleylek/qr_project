@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qrproject/pages/pricing.dart';
 import 'package:qrproject/pages/references.dart';
+import '../widgets/footer.dart'; // Footer'ı import ettik
 
 import 'home_page.dart'; // Simge kullanmak için FontAwesome
 
@@ -39,8 +40,7 @@ class FeaturesPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            HomePage()), // FeaturesPage'e yönlendir
+                        builder: (context) => HomePage()), // HomePage'e yönlendir
                   );
                 },
                 child: const Text(
@@ -112,91 +112,93 @@ class FeaturesPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Uygulamamızın Temel Özellikleri",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blueAccent, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(44, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black
-                                .withOpacity(0.2), // Gölge rengi ve opaklığı
-                            spreadRadius: 5, // Gölgenin yayılma miktarı
-                            blurRadius: 10, // Gölgenin bulanıklık miktarı
-                            offset: const Offset(4,
-                                4), // Gölgenin x ve y yönlerinde kaydırılması
+                    const Text(
+                      "Uygulamamızın Temel Özellikleri",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          Container(
+                            height: 300,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(44, 0, 0, 0),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 5,
+                                  blurRadius: 10,
+                                  offset: const Offset(4, 4),
+                                ),
+                              ],
+                            ),
                           ),
+                          /*
+                          FeatureCard(
+                            icon: FontAwesomeIcons.qrcode,
+                            title: "Kolay QR Kod",
+                            description:
+                            "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.mobileAlt,
+                            title: "Mobil Uyumluluk",
+                            description:
+                            "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.lock,
+                            title: "Güvenli Altyapı",
+                            description:
+                            "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.chartLine,
+                            title: "Analiz ve Raporlama",
+                            description:
+                            "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
+                          ),
+                          FeatureCard(
+                            icon: FontAwesomeIcons.cogs,
+                            title: "Kullanıcı Dostu Yönetim",
+                            description:
+                            "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
+                          ),
+                          */
                         ],
                       ),
                     ),
-
-/*
-                    FeatureCard(
-
-                      icon: FontAwesomeIcons.qrcode,
-                      title: "Kolay QR Kod",
-                      description:
-                      "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
-
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.mobileAlt,
-                      title: "Mobil Uyumluluk",
-                      description:
-                      "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.lock,
-                      title: "Güvenli Altyapı",
-                      description:
-                      "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.chartLine,
-                      title: "Analiz ve Raporlama",
-                      description:
-                      "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
-                    ),
-                    FeatureCard(
-                      icon: FontAwesomeIcons.cogs,
-                      title: "Kullanıcı Dostu Yönetim",
-                      description:
-                      "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
-                    ),
-                    */
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          const Footer(), // Footer'ı burada ekliyoruz
+        ],
       ),
     );
   }

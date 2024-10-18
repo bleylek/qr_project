@@ -3,6 +3,7 @@ import 'package:qrproject/pages/home_page.dart';
 import 'package:qrproject/pages/pricing.dart';
 import 'package:qrproject/pages/references.dart';
 import 'package:qrproject/services/auth_service.dart'; // AuthService import
+import '../widgets/footer.dart'; // Footer import
 import 'forgot_password.dart';
 import 'logut.dart'; // LogoutPage'i import edin
 
@@ -134,14 +135,21 @@ class _AuthPageState extends State<AuthPage> {
           ),
         ),
       ),
-      body: PageView(
-        controller: _pageController,
+      body: Column(
         children: [
-          LoginPage(pageController: _pageController), // Giriş Yap sayfası
-          SignupPage(
-              pageController: _pageController,
-              emailController: _emailController,
-              passwordController: _passwordController), // Kaydol sayfası
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              children: [
+                LoginPage(pageController: _pageController), // Giriş Yap sayfası
+                SignupPage(
+                    pageController: _pageController,
+                    emailController: _emailController,
+                    passwordController: _passwordController), // Kaydol sayfası
+              ],
+            ),
+          ),
+          const Footer(), // Footer'ı burada ekliyoruz
         ],
       ),
     );
@@ -215,7 +223,7 @@ class LoginPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
                 );
               },
-              child: Text(
+              child: const Text(
                 "Şifreni mi unuttun?",
                 style: TextStyle(color: Colors.white),
               ),
@@ -274,7 +282,10 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class SignupPage extends StatelessWidget {
+
+
+
+class SignupPage extends StatefulWidget {
   final PageController pageController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -285,6 +296,19 @@ class SignupPage extends StatelessWidget {
     required this.emailController,
     required this.passwordController,
   });
+
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +336,7 @@ class SignupPage extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             TextField(
-              controller: emailController,
+              controller: widget.emailController,
               decoration: InputDecoration(
                 labelText: "E-posta",
                 labelStyle: const TextStyle(color: Colors.white),
@@ -325,7 +349,7 @@ class SignupPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: passwordController,
+              controller: widget.passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: "Şifre",
@@ -337,23 +361,49 @@ class SignupPage extends StatelessWidget {
                 fillColor: Colors.white.withOpacity(0.1),
               ),
             ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _confirmPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: "Şifreyi Doğrula",
+                labelStyle: const TextStyle(color: Colors.white),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.1),
+              ),
+            ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                bool success = await AuthService().signup(
-                  email: emailController.text,
-                  password: passwordController.text,
-                );
-
-                if (success) {
-                  // Kayıt başarılıysa LogoutPage'e yönlendirme
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LogoutPage()),
+                if (widget.passwordController.text == _confirmPasswordController.text) {
+                  bool success = await AuthService().signup(
+                    email: widget.emailController.text,
+                    password: widget.passwordController.text,
                   );
+
+                  if (success) {
+                    // Doğrulama kodu oluştur
+                    String verificationCode = AuthService().generateVerificationCode();
+
+                    // Kullanıcıyı doğrulama sayfasına yönlendir
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LogoutPage()
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Kayıt Başarısız')),
+                    );
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Kayıt Başarısız')));
+                    const SnackBar(content: Text('Şifreler uyuşmuyor')),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -367,46 +417,11 @@ class SignupPage extends StatelessWidget {
                 child: Text("Kayıt Ol", style: TextStyle(fontSize: 18)),
               ),
             ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () async {
-                bool success = await AuthService().googleSignIn();
-
-                if (success) {
-                  // Google Sign-In başarılıysa bir sonraki sayfaya yönlendirme
-                  Navigator.pushReplacementNamed(context, '/home');
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Google ile giriş başarısız')),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.blueAccent,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset('assets/google_logo.png',
-                      height: 24), // Google logosu için bir resim ekleyin
-                  const SizedBox(width: 10),
-                  const Text('Google ile Giriş Yap',
-                      style: TextStyle(color: Colors.black)),
-                ],
-              ),
-            ),
             const SizedBox(height: 16),
             Center(
               child: TextButton(
                 onPressed: () {
-                  // Giriş Yap sayfasına yönlendirme
-                  pageController.animateToPage(0,
+                  widget.pageController.animateToPage(0,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut);
                 },
