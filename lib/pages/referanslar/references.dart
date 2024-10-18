@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/pricing.dart';
-
-import 'features.dart';
-import 'home_page.dart';
+import 'package:qrproject/pages/anasayfa/home_page.dart';
+import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
+import 'package:qrproject/pages/ozellikler/features.dart';
+import 'package:qrproject/widgets/footer.dart';
 
 class ReferencesPage extends StatefulWidget {
   const ReferencesPage({super.key});
@@ -74,7 +74,9 @@ class _ReferencesPageState extends State<ReferencesPage>
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
                   );
                 },
                 child: const Text(
@@ -87,8 +89,8 @@ class _ReferencesPageState extends State<ReferencesPage>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const FeaturesPage()), // FeaturesPage'e yönlendir
+                      builder: (context) => const FeaturesPage(),
+                    ), // FeaturesPage'e yönlendir
                   );
                 },
                 child: const Text(
@@ -101,7 +103,8 @@ class _ReferencesPageState extends State<ReferencesPage>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PricingPage()),
+                      builder: (context) => const PricingPage(),
+                    ),
                   );
                 },
                 child: const Text(

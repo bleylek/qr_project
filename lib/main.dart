@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:qrproject/firebase_options.dart';
 import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/login_signup.dart'; // AuthPage'i import edin
-import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/logut.dart';
 
 void main() async {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/pricing.dart';
-import 'package:qrproject/pages/references.dart';
-
+import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
+import 'package:qrproject/pages/ozellikler/features.dart';
+import 'package:qrproject/pages/referanslar/references.dart';
 import '../widgets/footer.dart';
-import 'features.dart';
 import 'login_signup.dart';
 
 class HomePage extends StatelessWidget {
@@ -60,7 +59,8 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PricingPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const PricingPage()),
                   );
                 },
                 child: const Text(
@@ -72,7 +72,8 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const ReferencesPage()),
                   );
                 },
                 child: const Text(
@@ -85,7 +86,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AuthPage()),
+                    MaterialPageRoute(builder: (context) => const AuthPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

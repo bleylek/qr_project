@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/references.dart';
-
-import 'features.dart';
-import 'home_page.dart';
+import 'package:qrproject/pages/anasayfa/home_page.dart';
+import 'package:qrproject/pages/ozellikler/features.dart';
+import 'package:qrproject/pages/referanslar/references.dart';
 
 class PricingPage extends StatelessWidget {
   const PricingPage({super.key});
@@ -72,7 +71,9 @@ class PricingPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const ReferencesPage(),
+                    ),
                   );
                 },
                 child: const Text(
@@ -139,7 +140,7 @@ class PricingPage extends StatelessWidget {
               const SizedBox(height: 16),
               Expanded(
                 child: ListView(
-                  children: [
+                  children: const [
                     PricingCard(
                       imagePath:
                           'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu

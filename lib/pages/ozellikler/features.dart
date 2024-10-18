@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qrproject/pages/pricing.dart';
-import 'package:qrproject/pages/references.dart';
-
-import 'home_page.dart'; // Simge kullanmak için FontAwesome
+import 'package:qrproject/pages/anasayfa/home_page.dart';
+import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
+import 'package:qrproject/pages/referanslar/references.dart';
+import 'package:qrproject/widgets/footer.dart';
 
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
@@ -39,8 +39,8 @@ class FeaturesPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            HomePage()), // FeaturesPage'e yönlendir
+                      builder: (context) => const HomePage(),
+                    ), // FeaturesPage'e yönlendir
                   );
                 },
                 child: const Text(
@@ -59,7 +59,8 @@ class FeaturesPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PricingPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const PricingPage()),
                   );
                 },
                 child: const Text(
@@ -71,7 +72,8 @@ class FeaturesPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReferencesPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const ReferencesPage()),
                   );
                 },
                 child: const Text(
@@ -210,7 +212,10 @@ class FeatureCard extends StatelessWidget {
   final String description;
 
   const FeatureCard(
-      {required this.icon, required this.title, required this.description});
+      {super.key,
+      required this.icon,
+      required this.title,
+      required this.description});
 
   @override
   Widget build(BuildContext context) {
