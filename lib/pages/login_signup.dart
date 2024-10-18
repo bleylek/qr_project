@@ -345,6 +345,38 @@ class SignupPage extends StatelessWidget {
                 child: Text("Kayıt Ol", style: TextStyle(fontSize: 18)),
               ),
             ),
+            SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () async {
+                bool success = await AuthService().googleSignIn();
+
+                if (success) {
+                  // Google Sign-In başarılıysa bir sonraki sayfaya yönlendirme
+                  Navigator.pushReplacementNamed(context, '/home');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Google ile giriş başarısız')),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blueAccent,
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset('assets/google_logo.png', height: 24), // Google logosu için bir resim ekleyin
+                  SizedBox(width: 10),
+                  Text('Google ile Giriş Yap', style: TextStyle(color: Colors.black)),
+                ],
+              ),
+            ),
+
             SizedBox(height: 16),
             Center(
               child: TextButton(

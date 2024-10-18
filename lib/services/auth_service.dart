@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
+  // Email ve şifre ile kayıt
   Future<bool> signup({
     required String email,
-    required String password
+    required String password,
   }) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -26,9 +28,10 @@ class AuthService {
     }
   }
 
+  // Email ve şifre ile giriş
   Future<bool> signin({
     required String email,
-    required String password
+    required String password,
   }) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -48,6 +51,30 @@ class AuthService {
     } catch (e) {
       print(e.toString());
       return false;
+    }
+  }
+
+  // Google Sign-In
+  Future<bool> googleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        return false; // Kullanıcı giriş yapmayı iptal etti
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      return true; // Başarılı Google Sign-In
+    } catch (e) {
+      print('Google Sign-In Hatası: $e');
+      return false; // Google Sign-In başarısız
     }
   }
 
