@@ -3,6 +3,7 @@ import 'package:qrproject/pages/home_page.dart';
 import 'package:qrproject/pages/pricing.dart';
 import 'package:qrproject/pages/references.dart';
 import 'package:qrproject/services/auth_service.dart'; // AuthService import
+import 'forgot_password.dart';
 import 'logut.dart'; // LogoutPage'i import edin
 
 class AuthPage extends StatefulWidget {
@@ -208,10 +209,16 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 16),
             TextButton(
               onPressed: () {
-                // Şifremi Unuttum işlemine yönlendir
+                // Şifremi Unuttum sayfasına yönlendir
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                );
               },
-              child: const Text("Şifreni mi unuttun?",
-                  style: TextStyle(color: Colors.white)),
+              child: Text(
+                "Şifreni mi unuttun?",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 32),
             ElevatedButton(

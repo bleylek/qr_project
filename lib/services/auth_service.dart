@@ -78,6 +78,16 @@ class AuthService {
     }
   }
 
+  // Şifre sıfırlama e-postası gönderme methodu
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      print('Şifre sıfırlama e-postası gönderildi');
+    } catch (e) {
+      print('Şifre sıfırlama e-postası gönderilemedi: $e');
+    }
+  }
+
   // Logout methodu
   Future<void> signout() async {
     try {
