@@ -5,13 +5,15 @@ import 'features.dart';
 import 'home_page.dart';
 
 class PricingPage extends StatelessWidget {
+  const PricingPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.blueAccent, Colors.purpleAccent],
               begin: Alignment.topLeft,
@@ -21,7 +23,7 @@ class PricingPage extends StatelessWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(
+            title: const Text(
               "QR Menü",
               style: TextStyle(
                 fontSize: 24,
@@ -35,10 +37,12 @@ class PricingPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()), // FeaturesPage'e yönlendir
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const HomePage()), // FeaturesPage'e yönlendir
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Ana Sayfa",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -47,20 +51,19 @@ class PricingPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FeaturesPage()), // FeaturesPage'e yönlendir
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const FeaturesPage()), // FeaturesPage'e yönlendir
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-
               TextButton(
-                onPressed: () {
-
-                },
-                child: Text(
+                onPressed: () {},
+                child: const Text(
                   "Fiyatlandırma",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -72,12 +75,12 @@ class PricingPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ReferencesPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Referanslar",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   // Giriş sayfasına yönlendir
@@ -89,9 +92,9 @@ class PricingPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Giriş Yap"),
+                child: const Text("Giriş Yap"),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
                   // Kayıt ol sayfasına yönlendir
@@ -103,9 +106,9 @@ class PricingPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Kayıt Ol"),
+                child: const Text("Kayıt Ol"),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ),
@@ -113,7 +116,7 @@ class PricingPage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,
@@ -125,7 +128,7 @@ class PricingPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Fiyatlandırma Planlarımız",
                 style: TextStyle(
                   color: Colors.white,
@@ -133,21 +136,25 @@ class PricingPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: ListView(
                   children: [
                     PricingCard(
-                      imagePath: 'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu
+                      imagePath:
+                          'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu
                       title: "6 Aylık Plan",
                       price: "660 ₺",
-                      description: "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+                      description:
+                          "6 ay boyunca tüm özellikler ve sınırsız erişim.",
                     ),
                     PricingCard(
-                      imagePath: 'lib/images/pexels-pixabay-278430.jpg', // Aynı resim ya da farklı bir resim kullanılabilir
+                      imagePath:
+                          'lib/images/pexels-pixabay-278430.jpg', // Aynı resim ya da farklı bir resim kullanılabilir
                       title: "12 Aylık Plan",
                       price: "1200 ₺",
-                      description: "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                      description:
+                          "12 ay boyunca tüm özellikler ve sınırsız erişim.",
                     ),
                   ],
                 ),
@@ -166,7 +173,8 @@ class PricingCard extends StatelessWidget {
   final String price;
   final String description;
 
-  PricingCard({
+  const PricingCard({
+    super.key,
     required this.imagePath,
     required this.title,
     required this.price,
@@ -179,7 +187,7 @@ class PricingCard extends StatelessWidget {
       color: Colors.white.withOpacity(0.9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -191,27 +199,27 @@ class PricingCard extends StatelessWidget {
               width: double.infinity,
               fit: BoxFit.cover, // Resmin tamamının görünmesi için
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               price,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.blueAccent,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               description,
-              style: TextStyle(fontSize: 14, color: Colors.black54),
+              style: const TextStyle(fontSize: 14, color: Colors.black54),
               textAlign: TextAlign.center,
             ),
           ],

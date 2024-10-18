@@ -6,13 +6,15 @@ import 'package:qrproject/pages/references.dart';
 import 'home_page.dart'; // Simge kullanmak için FontAwesome
 
 class FeaturesPage extends StatelessWidget {
+  const FeaturesPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.blueAccent, Colors.purpleAccent],
               begin: Alignment.topLeft,
@@ -22,7 +24,7 @@ class FeaturesPage extends StatelessWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(
+            title: const Text(
               "QR Menü",
               style: TextStyle(
                 fontSize: 24,
@@ -36,24 +38,23 @@ class FeaturesPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()), // FeaturesPage'e yönlendir
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            HomePage()), // FeaturesPage'e yönlendir
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Ana Sayfa",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
               TextButton(
-                onPressed: () {
-
-                },
+                onPressed: () {},
                 child: const Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-
               TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -73,12 +74,12 @@ class FeaturesPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ReferencesPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Referanslar",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   // Giriş sayfasına yönlendir
@@ -90,9 +91,9 @@ class FeaturesPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Giriş Yap"),
+                child: const Text("Giriş Yap"),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
                   // Kayıt ol sayfasına yönlendir
@@ -104,9 +105,9 @@ class FeaturesPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Kayıt Ol"),
+                child: const Text("Kayıt Ol"),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ),
@@ -114,7 +115,7 @@ class FeaturesPage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,
@@ -126,7 +127,7 @@ class FeaturesPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Uygulamamızın Temel Özellikleri",
                 style: TextStyle(
                   color: Colors.white,
@@ -134,7 +135,7 @@ class FeaturesPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: ListView(
                   children: [
@@ -145,10 +146,12 @@ class FeaturesPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2), // Gölge rengi ve opaklığı
+                            color: Colors.black
+                                .withOpacity(0.2), // Gölge rengi ve opaklığı
                             spreadRadius: 5, // Gölgenin yayılma miktarı
                             blurRadius: 10, // Gölgenin bulanıklık miktarı
-                            offset: Offset(4, 4), // Gölgenin x ve y yönlerinde kaydırılması
+                            offset: const Offset(4,
+                                4), // Gölgenin x ve y yönlerinde kaydırılması
                           ),
                         ],
                       ),
@@ -204,7 +207,8 @@ class FeatureCard extends StatelessWidget {
   final String title;
   final String description;
 
-  FeatureCard({required this.icon, required this.title, required this.description});
+  const FeatureCard(
+      {required this.icon, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +216,7 @@ class FeatureCard extends StatelessWidget {
       color: Colors.white.withOpacity(0.8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -226,23 +230,23 @@ class FeatureCard extends StatelessWidget {
                 size: 30,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     description,
-                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ],
               ),

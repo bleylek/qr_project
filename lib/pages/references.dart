@@ -5,11 +5,14 @@ import 'features.dart';
 import 'home_page.dart';
 
 class ReferencesPage extends StatefulWidget {
+  const ReferencesPage({super.key});
+
   @override
-  _ReferencesPageState createState() => _ReferencesPageState();
+  State<ReferencesPage> createState() => _ReferencesPageState();
 }
 
-class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStateMixin {
+class _ReferencesPageState extends State<ReferencesPage>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
 
@@ -46,9 +49,9 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.blueAccent, Colors.purpleAccent],
               begin: Alignment.topLeft,
@@ -58,7 +61,7 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(
+            title: const Text(
               "QR Menü",
               style: TextStyle(
                 fontSize: 24,
@@ -71,10 +74,10 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Ana Sayfa",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -83,23 +86,25 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FeaturesPage()), // FeaturesPage'e yönlendir
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const FeaturesPage()), // FeaturesPage'e yönlendir
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PricingPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const PricingPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Fiyatlandırma",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -108,12 +113,12 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                 onPressed: () {
                   // Referanslar sayfasına yönlendir (bu sayfa)
                 },
-                child: Text(
+                child: const Text(
                   "Referanslar",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   // Giriş sayfasına yönlendir
@@ -125,9 +130,9 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Giriş Yap"),
+                child: const Text("Giriş Yap"),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
                   // Kayıt ol sayfasına yönlendir
@@ -139,9 +144,9 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Kayıt Ol"),
+                child: const Text("Kayıt Ol"),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ),
@@ -149,7 +154,7 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,
@@ -161,7 +166,7 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Referanslarımız",
                 style: TextStyle(
                   color: Colors.white,
@@ -169,32 +174,37 @@ class _ReferencesPageState extends State<ReferencesPage> with TickerProviderStat
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: ListView(
                   children: [
                     SlideTransition(
                       position: _offsetAnimation,
-                      child: ReferenceCard(
+                      child: const ReferenceCard(
                         name: "Restoran A",
-                        description: "Türkiye'nin en ünlü restoranlarından biri.",
-                        imageUrl: 'https://via.placeholder.com/300x160', // Görselin URL'si
+                        description:
+                            "Türkiye'nin en ünlü restoranlarından biri.",
+                        imageUrl:
+                            'https://via.placeholder.com/300x160', // Görselin URL'si
                       ),
                     ),
                     SlideTransition(
                       position: _offsetAnimation,
-                      child: ReferenceCard(
+                      child: const ReferenceCard(
                         name: "Kafe B",
                         description: "En çok tercih edilen kafelerden biri.",
-                        imageUrl: 'https://via.placeholder.com/300x160', // Görselin URL'si
+                        imageUrl:
+                            'https://via.placeholder.com/300x160', // Görselin URL'si
                       ),
                     ),
                     SlideTransition(
                       position: _offsetAnimation,
-                      child: ReferenceCard(
+                      child: const ReferenceCard(
                         name: "Otel C",
-                        description: "Müşteri memnuniyeti yüksek otellerden biri.",
-                        imageUrl: 'https://via.placeholder.com/300x160', // Görselin URL'si
+                        description:
+                            "Müşteri memnuniyeti yüksek otellerden biri.",
+                        imageUrl:
+                            'https://via.placeholder.com/300x160', // Görselin URL'si
                       ),
                     ),
                   ],
@@ -213,7 +223,8 @@ class ReferenceCard extends StatelessWidget {
   final String description;
   final String imageUrl;
 
-  ReferenceCard({
+  const ReferenceCard({
+    super.key,
     required this.name,
     required this.description,
     required this.imageUrl,
@@ -225,7 +236,7 @@ class ReferenceCard extends StatelessWidget {
       color: Colors.white.withOpacity(0.9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -237,19 +248,19 @@ class ReferenceCard extends StatelessWidget {
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               description,
-              style: TextStyle(fontSize: 14, color: Colors.black54),
+              style: const TextStyle(fontSize: 14, color: Colors.black54),
             ),
           ],
         ),

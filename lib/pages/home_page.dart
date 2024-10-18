@@ -6,13 +6,15 @@ import 'features.dart';
 import 'login_signup.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.blueAccent, Colors.purpleAccent],
               begin: Alignment.topLeft,
@@ -20,9 +22,10 @@ class HomePage extends StatelessWidget {
             ),
           ),
           child: AppBar(
-            backgroundColor: Colors.transparent, // Background rengini transparan yapıyoruz
+            backgroundColor:
+                Colors.transparent, // Background rengini transparan yapıyoruz
             elevation: 0, // Gölgeyi kaldırıyoruz
-            title: Text(
+            title: const Text(
               "QR Menü",
               style: TextStyle(
                 fontSize: 24,
@@ -36,7 +39,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   // Referanslar sayfasına yönlendir
                 },
-                child: Text(
+                child: const Text(
                   "Ana Sayfa",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -45,15 +48,16 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FeaturesPage()), // FeaturesPage'e yönlendir
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const FeaturesPage()), // FeaturesPage'e yönlendir
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Özellikler",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-
               TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -61,7 +65,7 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => PricingPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Fiyatlandırma",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
@@ -73,17 +77,19 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ReferencesPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Referanslar",
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AuthPage()), // AuthPage'e yönlendir (giriş/kaydol sayfası)
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AuthPage()), // AuthPage'e yönlendir (giriş/kaydol sayfası)
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -93,15 +99,16 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Giriş Yap"),
+                child: const Text("Giriş Yap"),
               ),
-
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AuthPage()), // AuthPage'e yönlendir (giriş/kaydol sayfası)
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AuthPage()), // AuthPage'e yönlendir (giriş/kaydol sayfası)
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -111,9 +118,9 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Kayıt Ol"),
+                child: const Text("Kayıt Ol"),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ),
@@ -121,7 +128,7 @@ class HomePage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,
@@ -132,7 +139,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "QR Menü ile Kolay Sipariş",
                 style: TextStyle(
                   fontSize: 32,
@@ -140,20 +147,20 @@ class HomePage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 "Menülerimize kolayca ulaşın ve sipariş verin.",
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               // QR Kodu (Geçici Görsel Yer Tutucu)
               Container(
                 height: 200,
                 width: 200,
                 color: Colors.white,
-                child: Center(child: Text("QR Kodu Buraya")),
+                child: const Center(child: Text("QR Kodu Buraya")),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
                   // Menüyü İncele sayfasına yönlendir
@@ -161,12 +168,13 @@ class HomePage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.blueAccent,
-                  padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Menüleri İncele"),
+                child: const Text("Menüleri İncele"),
               ),
             ],
           ),

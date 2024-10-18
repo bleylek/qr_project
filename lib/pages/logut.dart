@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:qrproject/services/auth_service.dart';
 
 class LogoutPage extends StatelessWidget {
+  const LogoutPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Çıkış Yap'),
+        title: const Text('Çıkış Yap'),
         automaticallyImplyLeading: false, // Geri butonunu gizle
       ),
       body: Center(
@@ -18,12 +20,12 @@ class LogoutPage extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blueAccent,
-            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          child: Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+          child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
         ),
       ),
     );
