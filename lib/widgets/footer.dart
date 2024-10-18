@@ -9,7 +9,7 @@ class Footer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(137, 176, 91, 91), // Tek bir color kullanımı
+        color: Colors.purple[900], // Tek bir color kullanımı
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
