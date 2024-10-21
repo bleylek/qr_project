@@ -159,38 +159,36 @@ class FeaturesPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          /*
-                          FeatureCard(
+                          const FeatureCard(
                             icon: FontAwesomeIcons.qrcode,
                             title: "Kolay QR Kod",
                             description:
-                            "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
+                                "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
                           ),
-                          FeatureCard(
+                          const FeatureCard(
                             icon: FontAwesomeIcons.mobileAlt,
                             title: "Mobil Uyumluluk",
                             description:
-                            "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
+                                "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
                           ),
-                          FeatureCard(
+                          const FeatureCard(
                             icon: FontAwesomeIcons.lock,
                             title: "Güvenli Altyapı",
                             description:
-                            "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
+                                "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
                           ),
-                          FeatureCard(
+                          const FeatureCard(
                             icon: FontAwesomeIcons.chartLine,
                             title: "Analiz ve Raporlama",
                             description:
-                            "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
+                                "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
                           ),
-                          FeatureCard(
+                          const FeatureCard(
                             icon: FontAwesomeIcons.cogs,
                             title: "Kullanıcı Dostu Yönetim",
                             description:
-                            "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
+                                "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
                           ),
-                          */
                         ],
                       ),
                     ),

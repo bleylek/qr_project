@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/ozellikler/features.dart';
 import 'package:qrproject/pages/anasayfa/home_page.dart';
+import 'package:qrproject/pages/ozellikler/features.dart';
 import 'package:qrproject/pages/login_signup.dart';
 import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
 import 'package:qrproject/pages/referanslar/references.dart';

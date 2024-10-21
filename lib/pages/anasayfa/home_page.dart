@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:qrproject/pages/anasayfa/anasayfa_containers/benefits_container.dart';
+import 'package:qrproject/pages/anasayfa/anasayfa_containers/menu_images_container.dart';
+import 'package:qrproject/pages/anasayfa/anasayfa_containers/pricing_container.dart';
 import 'package:qrproject/widgets/appBar.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,47 +35,21 @@ class HomePage extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "QR Menü ile Kolay Sipariş",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: const [
+              // ilk container
+              BenefitsContainer(),
+              SizedBox(
+                height: 64,
               ),
-              const SizedBox(height: 16),
-              const Text(
-                "Menülerimize kolayca ulaşın ve sipariş verin.",
-                style: TextStyle(fontSize: 16, color: Colors.white70),
+              // ikinci container
+              MenuImagesContainer(),
+              SizedBox(
+                height: 64,
               ),
-              const SizedBox(height: 32),
-              // QR Kodu (Geçici Görsel Yer Tutucu)
-              Container(
-                height: 200,
-                width: 200,
-                color: Colors.white,
-                child: const Center(child: Text("QR Kodu Buraya")),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  // Menüyü İncele sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Menüleri İncele"),
-              ),
+              PricingContainer(),
             ],
           ),
         ),

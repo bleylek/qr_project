@@ -66,6 +66,23 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - lib/images/pexels-pixabay-278430.jpg
+    - lib/images/phone-image.png
+    - lib/images/phone-image2.png
+    - lib/images/phone-image3.png
+    - lib/images/phone-image4.png
+    - lib/images/phone-image5.png
+    - lib/images/phone-image6.png
+    - lib/images/phone-image7.png
+    - lib/images/phone-image8.png
+    - lib/images/phone-image9.png
+    - lib/images/phone-image10.png
+    - lib/images/phone-image11.png
+    - lib/images/phone-image12.png
+    - lib/images/phone-image13.png
+    - lib/images/phone-image14.png
+    - lib/images/phone-image15.png
+    - lib/images/phone-image16.png
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
