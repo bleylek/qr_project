@@ -61,6 +61,7 @@ class _ReferencesPageState extends State<ReferencesPage>
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            automaticallyImplyLeading: false,
             title: const Text(
               "QR Menü",
               style: TextStyle(
