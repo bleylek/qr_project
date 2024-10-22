@@ -92,7 +92,7 @@ class _AuthPageState extends State<AuthPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReferencesPage()),
+                        builder: (context) => ReferencesPage()),
                   );
                 },
                 child: const Text(

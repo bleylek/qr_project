@@ -73,7 +73,7 @@ class FeaturesPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReferencesPage()),
+                        builder: (context) => ReferencesPage()),
                   );
                 },
                 child: const Text(

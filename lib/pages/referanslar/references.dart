@@ -1,55 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/anasayfa/home_page.dart';
-import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
-import 'package:qrproject/pages/ozellikler/features.dart';
-import 'package:qrproject/widgets/footer.dart';
+import 'package:qrproject/widgets/appBar.dart';  // Mevcut AppBar widget'ınız
+import 'package:qrproject/widgets/footer.dart';  // Mevcut Footer widget'ınız
 
-class ReferencesPage extends StatefulWidget {
-  const ReferencesPage({super.key});
-
-  @override
-  State<ReferencesPage> createState() => _ReferencesPageState();
-}
-
-class _ReferencesPageState extends State<ReferencesPage>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Offset> _offsetAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Animasyon Kontrolcüsü
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1), // Animasyonun süresi
-      vsync: this,
-    );
-
-    // SlideTransition için Offset Animasyonu
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1.0), // Başlangıç noktası (aşağıdan yukarıya)
-      end: Offset.zero, // Son nokta (yerinde sabit)
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut, // Yumuşak geçiş
-    ));
-
-    // Animasyonu başlatıyoruz
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class ReferencesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // crossAxisCount değerini ekran genişliğine göre dinamik yapıyoruz
+    int gridCount = 1; // Varsayılan tek sütun (küçük ekranlar için)
+    if (screenWidth >= 600) {
+      gridCount = 2; // Orta boyutlu ekranlar için iki sütun
+    }
+    if (screenWidth >= 900) {
+      gridCount = 4; // Büyük ekranlar için dört sütun
+    }
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
+        preferredSize: Size.fromHeight(kToolbarHeight), // AppBar yüksekliği
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -58,224 +27,235 @@ class _ReferencesPageState extends State<ReferencesPage>
               end: Alignment.bottomRight,
             ),
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            title: const Text(
-              "QR Menü",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  "Ana Sayfa",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FeaturesPage(),
-                    ), // FeaturesPage'e yönlendir
-                  );
-                },
-                child: const Text(
-                  "Özellikler",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PricingPage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  "Fiyatlandırma",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Referanslar sayfasına yönlendir (bu sayfa)
-                },
-                child: const Text(
-                  "Referanslar",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Giriş sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Giriş Yap"),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () {
-                  // Kayıt ol sayfasına yönlendir
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text("Kayıt Ol"),
-              ),
-              const SizedBox(width: 16),
-            ],
-          ),
+          child: const Appbar(currentPage: "references_page"),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blueAccent, Colors.purpleAccent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.purpleAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 40), // Üst boşluk
+              Text(
+                'Bizi Müşterilerimizden Dinleyin',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenWidth < 600 ? 22 : 28, // Ekran boyutuna göre font
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(height: 8),
+              Text(
+                '300\'den fazla işletme ve her gün binlerce kullanıcı QR Menu ile hem işlerini büyütüp hem de müşterilerine hızlı, teknolojik ve kullanışlı bir deneyim yaşatıyor',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenWidth < 600 ? 14 : 16, // Ekran boyutuna göre font
+                ),
+              ),
+              SizedBox(height: 30),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: gridCount, // Dinamik sütun sayısı
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
                   children: [
-                    const Text(
-                      "Referanslarımız",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    TestimonialCard(
+                      name: "Ahmet Erken",
+                      company: "Bodrum Cafe - Adana",
+                      review:
+                      "QR Menü, müşteri memnuniyetini artırmak için gerçekten mükemmel bir çözümdür...",
+                      stars: 5,
                     ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          SlideTransition(
-                            position: _offsetAnimation,
-                            child: const ReferenceCard(
-                              name: "Restoran A",
-                              description:
-                                  "Türkiye'nin en ünlü restoranlarından biri.",
-                              imageUrl:
-                                  'https://via.placeholder.com/300x160', // Görselin URL'si
-                            ),
-                          ),
-                          SlideTransition(
-                            position: _offsetAnimation,
-                            child: const ReferenceCard(
-                              name: "Kafe B",
-                              description:
-                                  "En çok tercih edilen kafelerden biri.",
-                              imageUrl:
-                                  'https://via.placeholder.com/300x160', // Görselin URL'si
-                            ),
-                          ),
-                          SlideTransition(
-                            position: _offsetAnimation,
-                            child: const ReferenceCard(
-                              name: "Otel C",
-                              description:
-                                  "Müşteri memnuniyeti yüksek otellerden biri.",
-                              imageUrl:
-                                  'https://via.placeholder.com/300x160', // Görselin URL'si
-                            ),
-                          ),
-                        ],
-                      ),
+                    TestimonialCard(
+                      name: "Aysun Yılmaz",
+                      company: "MADO - Gaziantep",
+                      review:
+                      "COVID öncesinde, misafirlerimize basılı menü kartları sunuyorduk...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Jay Carlo Rivera",
+                      company: "GODIVA Çikolatacı - Istanbul",
+                      review:
+                      "QR Menu, kafe satışlarımızı önemli ölçüde artırdı ve özellikle kahvaltı menümüzü başlatmamıza büyük katkı sağladı...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Mehmet Kalender",
+                      company: "Alaçatı Hoteli - Izmir",
+                      review:
+                      "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Ahmet Erken",
+                      company: "Bodrum Cafe - Adana",
+                      review:
+                      "QR Menü, müşteri memnuniyetini artırmak için gerçekten mükemmel bir çözümdür...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Aysun Yılmaz",
+                      company: "MADO - Gaziantep",
+                      review:
+                      "COVID öncesinde, misafirlerimize basılı menü kartları sunuyorduk...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Jay Carlo Rivera",
+                      company: "GODIVA Çikolatacı - Istanbul",
+                      review:
+                      "QR Menu, kafe satışlarımızı önemli ölçüde artırdı ve özellikle kahvaltı menümüzü başlatmamıza büyük katkı sağladı...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Mehmet Kalender",
+                      company: "Alaçatı Hoteli - Izmir",
+                      review:
+                      "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Ahmet Erken",
+                      company: "Bodrum Cafe - Adana",
+                      review:
+                      "QR Menü, müşteri memnuniyetini artırmak için gerçekten mükemmel bir çözümdür...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Aysun Yılmaz",
+                      company: "MADO - Gaziantep",
+                      review:
+                      "COVID öncesinde, misafirlerimize basılı menü kartları sunuyorduk...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Jay Carlo Rivera",
+                      company: "GODIVA Çikolatacı - Istanbul",
+                      review:
+                      "QR Menu, kafe satışlarımızı önemli ölçüde artırdı ve özellikle kahvaltı menümüzü başlatmamıza büyük katkı sağladı...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Mehmet Kalender",
+                      company: "Alaçatı Hoteli - Izmir",
+                      review:
+                      "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Ahmet Erken",
+                      company: "Bodrum Cafe - Adana",
+                      review:
+                      "QR Menü, müşteri memnuniyetini artırmak için gerçekten mükemmel bir çözümdür...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Aysun Yılmaz",
+                      company: "MADO - Gaziantep",
+                      review:
+                      "COVID öncesinde, misafirlerimize basılı menü kartları sunuyorduk...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Jay Carlo Rivera",
+                      company: "GODIVA Çikolatacı - Istanbul",
+                      review:
+                      "QR Menu, kafe satışlarımızı önemli ölçüde artırdı ve özellikle kahvaltı menümüzü başlatmamıza büyük katkı sağladı...",
+                      stars: 5,
+                    ),
+                    TestimonialCard(
+                      name: "Mehmet Kalender",
+                      company: "Alaçatı Hoteli - Izmir",
+                      review:
+                      "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
+                      stars: 5,
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-          const Footer(),
-        ],
+        ),
       ),
+      bottomNavigationBar: Footer(),  // Mevcut Footer widget'ınızı ekliyoruz
     );
   }
 }
 
-class ReferenceCard extends StatelessWidget {
+class TestimonialCard extends StatelessWidget {
   final String name;
-  final String description;
-  final String imageUrl;
+  final String company;
+  final String review;
+  final int stars;
 
-  const ReferenceCard({
-    super.key,
+  const TestimonialCard({
     required this.name,
-    required this.description,
-    required this.imageUrl,
+    required this.company,
+    required this.review,
+    required this.stars,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white.withOpacity(0.9),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              imageUrl,
-              height: 160,
-              width: double.infinity,
-              fit: BoxFit.cover,
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.indigo,
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(2, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: List.generate(stars, (index) {
+              return Icon(Icons.star, color: Colors.yellow, size: 24);
+            }),
+          ),
+          SizedBox(height: 8),
+          Text(
+            review,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: screenWidth < 600 ? 12 : 14, // Ekrana göre font boyutu
             ),
-            const SizedBox(height: 16),
+            maxLines: 5,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: 16),
+          Text(
+            name,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (company.isNotEmpty)
             Text(
-              name,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+              company,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: screenWidth < 600 ? 10 : 12, // Ekrana göre font boyutu
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
