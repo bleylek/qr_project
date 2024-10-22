@@ -5,6 +5,8 @@ import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
 import 'package:qrproject/pages/referanslar/references.dart';
 import 'package:qrproject/widgets/footer.dart';
 
+import '../login_signup.dart';
+
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
 
@@ -84,7 +86,11 @@ class FeaturesPage extends StatelessWidget {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Giriş sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AuthPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -98,7 +104,11 @@ class FeaturesPage extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
-                  // Kayıt ol sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AuthPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -164,10 +174,10 @@ class FeaturesPage extends StatelessWidget {
                                 "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
                           ),
                           const FeatureCard(
-                            icon: FontAwesomeIcons.chartLine,
-                            title: "Analiz ve Raporlama",
+                            icon: FontAwesomeIcons.language,
+                            title: "İstediğiniz Kadar Dil Seçeneği",
                             description:
-                                "Siparişler ve müşteri istatistikleri ile performansınızı takip edin.",
+                                "Yabancı müşterilerinize kendi dillerinde hizmet sağlayın.",
                           ),
                           const FeatureCard(
                             icon: FontAwesomeIcons.cogs,
@@ -206,7 +216,7 @@ class FeatureCard extends StatelessWidget {
     return Card(
       color: Colors.white.withOpacity(0.8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
+      elevation: 8,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
