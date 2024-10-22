@@ -133,7 +133,7 @@ class FeaturesPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Uygulamamızın Temel Özellikleri",
+                      "QR Menünün Özellikleri",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -144,21 +144,7 @@ class FeaturesPage extends StatelessWidget {
                     Expanded(
                       child: ListView(
                         children: [
-                          Container(
-                            height: 300,
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(44, 0, 0, 0),
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 5,
-                                  blurRadius: 10,
-                                  offset: const Offset(4, 4),
-                                ),
-                              ],
-                            ),
-                          ),
+
                           const FeatureCard(
                             icon: FontAwesomeIcons.qrcode,
                             title: "Kolay QR Kod",

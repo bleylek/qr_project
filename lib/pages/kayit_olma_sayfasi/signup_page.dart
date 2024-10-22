@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/logut.dart';
 import 'package:qrproject/services/auth_service.dart';
+import 'package:qrproject/pages/email_verification_page.dart'; // Doğrulama sayfası
 
 class SignupPage extends StatefulWidget {
   final PageController pageController;
@@ -20,7 +20,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void dispose() {
@@ -101,20 +101,10 @@ class _SignupPageState extends State<SignupPage> {
                   bool success = await AuthService().signup(
                     email: widget.emailController.text,
                     password: widget.passwordController.text,
+                    context: context,
                   );
 
-                  if (success) {
-                    // Doğrulama kodu oluştur
-                    String verificationCode =
-                        AuthService().generateVerificationCode();
-
-                    // Kullanıcıyı doğrulama sayfasına yönlendir
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LogoutPage()),
-                    );
-                  } else {
+                  if (!success) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Kayıt Başarısız')),
                     );

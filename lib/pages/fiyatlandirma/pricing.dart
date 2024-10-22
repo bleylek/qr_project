@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/ozellikler/features.dart';
 import 'package:qrproject/pages/referanslar/references.dart';
+import 'package:qrproject/widgets/footer.dart'; // Footer widget'ı
 
 class PricingPage extends StatelessWidget {
   const PricingPage({super.key});
@@ -38,7 +39,7 @@ class PricingPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const HomePage()), // FeaturesPage'e yönlendir
+                        const HomePage()), // Ana Sayfa'ya yönlendir
                   );
                 },
                 child: const Text(
@@ -52,7 +53,7 @@ class PricingPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const FeaturesPage()), // FeaturesPage'e yönlendir
+                        const FeaturesPage()), // Özellikler'e yönlendir
                   );
                 },
                 child: const Text(
@@ -114,55 +115,62 @@ class PricingPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Fiyatlandırma Planlarımız",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          // Fiyatlandırma başlığı ve kartlar
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blueAccent, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  children: const [
-                    PricingCard(
-                      imagePath:
-                          'lib/images/pexels-pixabay-278430.jpg', // AssetImage ile projedeki resim yolu
-                      title: "6 Aylık Plan",
-                      price: "660 ₺",
-                      description:
-                          "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Fiyatlandırma Planlarımız",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    PricingCard(
-                      imagePath:
-                          'lib/images/pexels-pixabay-278430.jpg', // Aynı resim ya da farklı bir resim kullanılabilir
-                      title: "12 Aylık Plan",
-                      price: "1200 ₺",
-                      description:
-                          "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        children: const [
+                          PricingCard(
+                            imagePath:
+                            'lib/images/pexels-pixabay-278430.jpg',
+                            title: "6 Aylık Plan",
+                            price: "660 ₺",
+                            description:
+                            "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+                          ),
+                          PricingCard(
+                            imagePath:
+                            'lib/images/pexels-pixabay-278430.jpg',
+                            title: "12 Aylık Plan",
+                            price: "1200 ₺",
+                            description:
+                            "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          // Footer widget'ı, boşluk olmaması için Expanded'in dışında
+          const Footer(), // Footer sayfanın en altına sıkıca yapışacak
+        ],
       ),
     );
   }
@@ -196,9 +204,9 @@ class PricingCard extends StatelessWidget {
           children: [
             Image.asset(
               imagePath,
-              height: 160, // 300x160 oranını sağlamak için
+              height: 160,
               width: double.infinity,
-              fit: BoxFit.cover, // Resmin tamamının görünmesi için
+              fit: BoxFit.cover,
             ),
             const SizedBox(height: 16),
             Text(
