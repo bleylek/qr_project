@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qrproject/firebase_options.dart';
 import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/login_signup.dart'; // AuthPage'i import edin
-import 'package:qrproject/pages/logut.dart';
+import 'package:qrproject/pages/login_first_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(), // Ana Sayfa
         '/auth': (context) => const AuthPage(), // Giriş/Kayıt Sayfası
-        '/logout': (context) => const LogoutPage(), // Logout Sayfası
+        '/logout': (context) => const LoginFirstPage(), // Logout Sayfası
       },
     );
   }

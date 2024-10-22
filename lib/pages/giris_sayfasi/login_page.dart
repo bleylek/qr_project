@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrproject/pages/forgot_password.dart';
-import 'package:qrproject/pages/logut.dart';
+import 'package:qrproject/pages/login_first_page.dart';
 import 'package:qrproject/services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
@@ -88,7 +88,8 @@ class LoginPage extends StatelessWidget {
                   // Giriş başarılıysa LogoutPage'e yönlendirme
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const LogoutPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const LoginFirstPage()),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

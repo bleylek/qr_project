@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/logut.dart';
+import 'package:qrproject/pages/login_first_page.dart';
 import 'package:qrproject/services/auth_service.dart';
 
 class SignupPage extends StatefulWidget {
@@ -112,7 +112,7 @@ class _SignupPageState extends State<SignupPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LogoutPage()),
+                          builder: (context) => const LoginFirstPage()),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
