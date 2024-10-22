@@ -7,9 +7,12 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Ensure no unnecessary padding or margin around the footer
       padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.zero,  // Added this to ensure no margin
+      width: double.infinity,   // Ensures the footer spans the full width
       decoration: BoxDecoration(
-        color: Colors.purple[900], // Tek bir color kullanımı
+        color: Colors.purple[900], // Background color
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

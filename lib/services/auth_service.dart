@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:math';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+
+import '../pages/email_verification_page.dart';
 
 class AuthService {
   // Rastgele doğrulama kodu oluşturma
@@ -10,28 +13,32 @@ class AuthService {
     return (rng.nextInt(900000) + 100000).toString(); // 6 haneli kod
   }
 
-  // Kayıt ve doğrulama kodu gönderme
+  // Kayıt ve doğrulama işlemi
   Future<bool> signup({
     required String email,
     required String password,
+    required BuildContext context,
   }) async {
     try {
       // Firebase ile kullanıcı kaydı oluştur
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Doğrulama kodunu oluştur
-      String verificationCode = generateVerificationCode();
+      // Doğrulama e-postası gönder
+      await userCredential.user!.sendEmailVerification();
 
-      // Doğrulama kodunu e-posta ile gönder
-      await sendVerificationEmail(email, verificationCode);
+      // Doğrulama sayfasına yönlendir
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const EmailVerificationPage(), // EmailVerificationPage'e yönlendir
+        ),
+      );
 
-      // Kullanıcıdan doğrulama kodunu girmesini isteyin
-      // Firebase User'ı doğrulama yapılana kadar bekletin
-
-      return true; // Başarılı kayıt
+      return true;
     } on FirebaseAuthException catch (e) {
       String message = "";
       if (e.code == 'weak-password') {
@@ -40,10 +47,10 @@ class AuthService {
         message = 'Bu e-posta ile kayıtlı bir hesap zaten mevcut';
       }
       print(message);
-      return false; // Başarısız kayıt
+      return false;
     } catch (e) {
       print(e.toString());
-      return false; // Genel hata
+      return false;
     }
   }
 
@@ -113,6 +120,27 @@ class AuthService {
       return false; // Google Sign-In başarısız
     }
   }
+
+  Future<void> sendEmailVerificationLink() async {
+    try {
+      // Mevcut kullanıcıyı alın
+      User? user = FirebaseAuth.instance.currentUser;
+
+      // Eğer kullanıcı oturum açmışsa ve null değilse
+      if (user != null && !user.emailVerified) {
+        // E-posta doğrulama bağlantısını gönder
+        await user.sendEmailVerification();
+        print("Doğrulama e-postası gönderildi");
+      } else if (user != null && user.emailVerified) {
+        print("E-posta zaten doğrulandı");
+      } else {
+        print("Kullanıcı oturumu yok");
+      }
+    } catch (e) {
+      print("Doğrulama e-postası gönderilemedi: ${e.toString()}");
+    }
+  }
+
 
   // Şifre sıfırlama e-postası gönderme
   Future<void> sendPasswordResetEmail(String email) async {
