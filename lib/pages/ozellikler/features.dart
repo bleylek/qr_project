@@ -12,6 +12,8 @@ class FeaturesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -42,7 +44,7 @@ class FeaturesPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const HomePage(),
-                    ), // FeaturesPage'e yönlendir
+                    ),
                   );
                 },
                 child: const Text(
@@ -124,12 +126,12 @@ class FeaturesPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
               width: double.infinity,
-              height: double.infinity,
+              height: 400, // Fotoğrafların bulunduğu alan için sabit yükseklik
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.blueAccent, Colors.purpleAccent],
@@ -151,51 +153,77 @@ class FeaturesPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView(
-                        children: [
 
-                          const FeatureCard(
-                            icon: FontAwesomeIcons.qrcode,
-                            title: "Kolay QR Kod",
-                            description:
-                                "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
-                          ),
-                          const FeatureCard(
-                            icon: FontAwesomeIcons.mobileAlt,
-                            title: "Mobil Uyumluluk",
-                            description:
-                                "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
-                          ),
-                          const FeatureCard(
-                            icon: FontAwesomeIcons.lock,
-                            title: "Güvenli Altyapı",
-                            description:
-                                "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
-                          ),
-                          const FeatureCard(
-                            icon: FontAwesomeIcons.language,
-                            title: "İstediğiniz Kadar Dil Seçeneği",
-                            description:
-                                "Yabancı müşterilerinize kendi dillerinde hizmet sağlayın.",
-                          ),
-                          const FeatureCard(
-                            icon: FontAwesomeIcons.cogs,
-                            title: "Kullanıcı Dostu Yönetim",
-                            description:
-                                "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
-                          ),
-                        ],
+                    // İki fotoğrafın yan yana görünmesini sağlayan Row
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical, // Dikey kaydırma
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Image.asset(
+                                'lib/images/pexels-chanwalrus-941861.jpg', // Fotoğraf 1
+                                height: 300,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(width: 16), // Fotoğraflar arasında boşluk
+                            Expanded(
+                              child: Image.asset(
+                                'lib/images/pexels-victorfreitas-744780.jpg', // Fotoğraf 2
+                                height: 300,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
-          const Footer(), // Footer'ı burada ekliyoruz
-        ],
+
+            const SizedBox(height: 16), // Fotoğraflardan sonra boşluk
+
+            // Özellikler kısmı
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  FeatureCard(
+                    icon: FontAwesomeIcons.qrcode,
+                    title: "Kolay QR Kod",
+                    description: "Müşterileriniz menüye hızlı ve kolayca erişebilir.",
+                  ),
+                  FeatureCard(
+                    icon: FontAwesomeIcons.mobileAlt,
+                    title: "Mobil Uyumluluk",
+                    description: "Tüm cihazlarda kusursuz çalışan mobil uyumlu tasarım.",
+                  ),
+                  FeatureCard(
+                    icon: FontAwesomeIcons.lock,
+                    title: "Güvenli Altyapı",
+                    description: "Verileriniz SSL ile şifrelenir ve güvenli bir şekilde saklanır.",
+                  ),
+                  FeatureCard(
+                    icon: FontAwesomeIcons.language,
+                    title: "İstediğiniz Kadar Dil Seçeneği",
+                    description: "Yabancı müşterilerinize kendi dillerinde hizmet sağlayın.",
+                  ),
+                  FeatureCard(
+                    icon: FontAwesomeIcons.cogs,
+                    title: "Kullanıcı Dostu Yönetim",
+                    description: "Menü ve siparişlerinizi hızlıca düzenleyin ve yönetin.",
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+      bottomNavigationBar: const Footer(), // Footer'ı burada ekliyoruz
     );
   }
 }
@@ -205,11 +233,12 @@ class FeatureCard extends StatelessWidget {
   final String title;
   final String description;
 
-  const FeatureCard(
-      {super.key,
-      required this.icon,
-      required this.title,
-      required this.description});
+  const FeatureCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -85,6 +85,12 @@ flutter:
     - lib/images/phone-image14.png
     - lib/images/phone-image15.png
     - lib/images/phone-image16.png
+    - lib/images/pexels-igor-starkov-233202-1307698.jpg
+    - lib/images/pexels-viktoria-alipatova-1083711-2074130.jpg
+    - lib/images/pexels-marta-dzedyshko-1042863-2775827.jpg
+    - lib/images/pexels-wildlittlethingsphoto-696218.jpg
+    - lib/images/pexels-chanwalrus-941861.jpg
+    - lib/images/pexels-victorfreitas-744780.jpg
     
   #   - images/a_dot_ham.jpeg
 

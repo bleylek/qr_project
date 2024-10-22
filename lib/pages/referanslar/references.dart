@@ -30,39 +30,64 @@ class ReferencesPage extends StatelessWidget {
           child: const Appbar(currentPage: "references_page"),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.purpleAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 40), // Üst boşluk
-              Text(
-                'Bizi Müşterilerimizden Dinleyin',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenWidth < 600 ? 22 : 28, // Ekran boyutuna göre font
-                  fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40), // Üst boşluk
+                Text(
+                  'Bizi Müşterilerimizden Dinleyin',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: screenWidth < 600 ? 22 : 28, // Ekran boyutuna göre font
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                '300\'den fazla işletme ve her gün binlerce kullanıcı QR Menu ile hem işlerini büyütüp hem de müşterilerine hızlı, teknolojik ve kullanışlı bir deneyim yaşatıyor',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenWidth < 600 ? 14 : 16, // Ekran boyutuna göre font
+                const SizedBox(height: 8),
+                Text(
+                  '300\'den fazla işletme ve her gün binlerce kullanıcı QR Menu ile hem işlerini büyütüp hem de müşterilerine hızlı, teknolojik ve kullanışlı bir deneyim yaşatıyor',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: screenWidth < 600 ? 14 : 16, // Ekran boyutuna göre font
+                  ),
                 ),
-              ),
-              SizedBox(height: 30),
-              Expanded(
-                child: GridView.count(
+                const SizedBox(height: 30),
+
+                // Fotoğrafları yan yana yerleştiriyoruz, kaydırılabilir hale getiriyoruz
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Simetrik hizalama
+                  children: [
+                    Image.asset(
+                      'lib/images/pexels-marta-dzedyshko-1042863-2775827.jpg', // Fotoğraf 1
+                      height: 250,
+                      width: screenWidth * 0.4, // Ekran genişliğine göre ayar
+                      fit: BoxFit.cover,
+                    ),
+                    Image.asset(
+                      'lib/images/pexels-wildlittlethingsphoto-696218.jpg', // Fotoğraf 2
+                      height: 250,
+                      width: screenWidth * 0.4, // Ekran genişliğine göre ayar
+                      fit: BoxFit.cover,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 30), // Fotoğraflardan sonra boşluk
+
+                // Testimonial kartlarını ekliyoruz
+                GridView.count(
+                  shrinkWrap: true, // GridView yüksekliği içerikle sınırlı olacak
+                  physics: const NeverScrollableScrollPhysics(), // GridView scroll edilemez olacak
                   crossAxisCount: gridCount, // Dinamik sütun sayısı
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
@@ -123,66 +148,10 @@ class ReferencesPage extends StatelessWidget {
                       "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
                       stars: 5,
                     ),
-                    TestimonialCard(
-                      name: "Ahmet Erken",
-                      company: "Bodrum Cafe - Adana",
-                      review:
-                      "QR Menü, müşteri memnuniyetini artırmak için gerçekten mükemmel bir çözümdür...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Aysun Yılmaz",
-                      company: "MADO - Gaziantep",
-                      review:
-                      "COVID öncesinde, misafirlerimize basılı menü kartları sunuyorduk...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Jay Carlo Rivera",
-                      company: "GODIVA Çikolatacı - Istanbul",
-                      review:
-                      "QR Menu, kafe satışlarımızı önemli ölçüde artırdı ve özellikle kahvaltı menümüzü başlatmamıza büyük katkı sağladı...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Mehmet Kalender",
-                      company: "Alaçatı Hoteli - Izmir",
-                      review:
-                      "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Ahmet Erken",
-                      company: "Bodrum Cafe - Adana",
-                      review:
-                      "QR Menü, müşteri memnuniyetini artırmak için gerçekten mükemmel bir çözümdür...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Aysun Yılmaz",
-                      company: "MADO - Gaziantep",
-                      review:
-                      "COVID öncesinde, misafirlerimize basılı menü kartları sunuyorduk...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Jay Carlo Rivera",
-                      company: "GODIVA Çikolatacı - Istanbul",
-                      review:
-                      "QR Menu, kafe satışlarımızı önemli ölçüde artırdı ve özellikle kahvaltı menümüzü başlatmamıza büyük katkı sağladı...",
-                      stars: 5,
-                    ),
-                    TestimonialCard(
-                      name: "Mehmet Kalender",
-                      company: "Alaçatı Hoteli - Izmir",
-                      review:
-                      "QR Menü, bizi birçok masraftan kurtardı ve işletmemizin operasyonlarını daha verimli hale getirdi...",
-                      stars: 5,
-                    ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -229,7 +198,7 @@ class TestimonialCard extends StatelessWidget {
               return Icon(Icons.star, color: Colors.yellow, size: 24);
             }),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             review,
             style: TextStyle(
@@ -239,7 +208,7 @@ class TestimonialCard extends StatelessWidget {
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             name,
             style: TextStyle(

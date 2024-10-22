@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/ozellikler/features.dart';
 import 'package:qrproject/pages/referanslar/references.dart';
-import 'package:qrproject/widgets/footer.dart'; // Footer widget'ı
+import 'package:qrproject/widgets/footer.dart';
+
+import '../login_signup.dart'; // Footer widget'ı
 
 class PricingPage extends StatelessWidget {
   const PricingPage({super.key});
@@ -85,7 +87,11 @@ class PricingPage extends StatelessWidget {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Giriş sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AuthPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -99,7 +105,11 @@ class PricingPage extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
-                  // Kayıt ol sayfasına yönlendir
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AuthPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -136,29 +146,28 @@ class PricingPage extends StatelessWidget {
                       "Fiyatlandırma Planlarımız",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 28,
+                        fontSize: 32, // Daha büyük font
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24), // Daha fazla boşluk
                     Expanded(
-                      child: ListView(
+                      child: GridView.count(
+                        crossAxisCount: 2, // 2 kolonlu grid görünümü
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
                         children: const [
                           PricingCard(
-                            imagePath:
-                            'lib/images/pexels-pixabay-278430.jpg',
+                            imagePath: 'lib/images/pexels-igor-starkov-233202-1307698.jpg',
                             title: "6 Aylık Plan",
                             price: "660 ₺",
-                            description:
-                            "6 ay boyunca tüm özellikler ve sınırsız erişim.",
+                            description: "6 ay boyunca tüm özellikler ve sınırsız erişim.",
                           ),
                           PricingCard(
-                            imagePath:
-                            'lib/images/pexels-pixabay-278430.jpg',
+                            imagePath: 'lib/images/pexels-viktoria-alipatova-1083711-2074130.jpg',
                             title: "12 Aylık Plan",
                             price: "1200 ₺",
-                            description:
-                            "12 ay boyunca tüm özellikler ve sınırsız erişim.",
+                            description: "12 ay boyunca tüm özellikler ve sınırsız erişim.",
                           ),
                         ],
                       ),
@@ -195,41 +204,71 @@ class PricingCard extends StatelessWidget {
     return Card(
       color: Colors.white.withOpacity(0.9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
+      elevation: 8, // Gölgeyi artırıyoruz
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              height: 160,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12), // Resme yuvarlak köşeler ekliyoruz
+              child: Image.asset(
+                imagePath,
+                height: 300, // Daha küçük resim boyutu
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 30),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 24, // Daha büyük başlık
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Text(
               price,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 20, // Fiyatı daha büyük ve belirgin
                 color: Colors.blueAccent,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Text(
               description,
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black54,
+              ),
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AuthPage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: Text(
+                  "Kayıt Ol",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
           ],
         ),

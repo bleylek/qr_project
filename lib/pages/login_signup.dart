@@ -3,6 +3,7 @@ import 'package:qrproject/pages/anasayfa/home_page.dart';
 import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
 import 'package:qrproject/pages/giris_sayfasi/login_page.dart';
 import 'package:qrproject/pages/kayit_olma_sayfasi/signup_page.dart';
+import 'package:qrproject/pages/ozellikler/features.dart';
 import 'package:qrproject/pages/referanslar/references.dart';
 import '../widgets/footer.dart'; // Footer import
 
@@ -67,7 +68,10 @@ class _AuthPageState extends State<AuthPage> {
               ),
               TextButton(
                 onPressed: () {
-                  // Şu anda özellikler sayfası
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FeaturesPage()),
+                  );
                 },
                 child: const Text(
                   "Özellikler",
