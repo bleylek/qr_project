@@ -33,28 +33,57 @@ class _InitializationPage extends State<InitializationPage> {
     _selectedLanguage = _langauges[0];
     _selectedCurrency = _currencies[0];
   }
-
-  Future<int> checkDigitalMenuAddress(String address) async {
+  Future<int> checkDigitalMenuAddress(
+      String userKey, String digitalMenuAddress) async {
+    print("Fonksiyon içerisinde________");
     try {
+      // Firestore referansını al
       final firestore = FirebaseFirestore.instance;
-      final querySnapshot =
-      await firestore.collection('DigitalAddresses').get();
 
+      // DigitalAddress koleksiyonunu sorgula
+      final querySnapshot = await firestore.collection('DigitalAddress').get();
+
+      print("querySnapshot");
+      print(querySnapshot);
+      print("__");
+
+      // Koleksiyon boşsa
       if (querySnapshot.docs.isEmpty) {
-        return 0;
+        print("koleksiyon boş");
+        return 0; // Koleksiyon boş
       }
+
+      // Belirtilen adresin belgeler içinde olup olmadığını kontrol et
 
       final addressSnapshot =
-      await firestore.collection('DigitalAddresses').doc(address).get();
+      await firestore.collection('DigitalAddress').doc(userKey).get();
 
+      // Eğer belge bulunursa adres kullanımda demektir
+
+      /*
+      Burda bir yanlışlık yapmışım. Bu if statementına bir || getirmek istiyorum. Bu ||'da şunu kontrol edecek:
+      DigitalAddress collectionun'daki userKey'e sahip herkeste DigitalMenuAddress adında
+      bir field var. Yani DigitalAddress (collection) --> userKey (doc) --> DigitalMenuAddress (field)
+      bu field'larda eğer bizim parametremiz olan digitalMenuAddress varsa yine 1 döndüreceğiz
+      */
       if (addressSnapshot.exists) {
-        return 1;
+        return 1; // Adres kullanımda
       }
 
-      return 0;
+      for (var doc in querySnapshot.docs) {
+        if (doc.exists && doc.data().containsKey("DigitalMenuAddress")) {
+          if (doc.get("DigitalMenuAddress") == digitalMenuAddress) {
+            return 1;
+          }
+        }
+      }
+
+      // Adres koleksiyonda yoksa
+      return 0; // Adres kullanımda değil
     } catch (e) {
+      // Hata durumunda hata mesajını konsola yazdır
       print("Firebase bağlantı hatası: $e");
-      return 2;
+      return 2; // Firebase bağlantı hatası
     }
   }
 
@@ -70,19 +99,30 @@ class _InitializationPage extends State<InitializationPage> {
     };
 
     var digitalMenuAddressRef = FirebaseFirestore.instance
-        .collection('DigitalAddresses')
-        .doc(_digitalMenuAddress);
+        .collection("DigitalAddress")
+        .doc(widget.userKey);
 
     Map<String, dynamic> digitalAddressInfo = {
       'MenuLanguage': _selectedLanguage,
       'MenuMoneyCurrency': _selectedCurrency,
+      'DigitalMenuAddress': _digitalMenuAddress,
     };
 
     try {
+      // Transaction kullanarak her iki işlemi atomik hale getir
       await FirebaseFirestore.instance.runTransaction((transaction) async {
+        // Digital address bilgilerini Firebase'e gönder
         transaction.set(
             digitalMenuAddressRef, digitalAddressInfo, SetOptions(merge: true));
+
+        // Verileri Firebase'e gönder
         transaction.set(collectionRef, companyInfo, SetOptions(merge: true));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditMenuPage(userKey: widget.userKey),
+          ),
+        );
       });
 
       print("Veriler başarıyla Firebase'e gönderildi.");
@@ -95,26 +135,35 @@ class _InitializationPage extends State<InitializationPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
-        isLoading = true;
+        isLoading = true; // İşlem başlarken loading durumunu ayarla
       });
 
-      int addressCheck = await checkDigitalMenuAddress(_digitalMenuAddress);
+      // Adres kontrolü için asenkron fonksiyonu çağır
+      int addressCheck =
+      await checkDigitalMenuAddress(widget.userKey, _digitalMenuAddress);
 
+      // Hala mounted ise setState ve context işlemlerini kullan
       if (!mounted) return;
 
       setState(() {
-        isLoading = false;
+        isLoading = false; // İşlem bittiğinde loading durumunu kaldır
       });
 
+      // 1) adres kimse tarafından kullanılmıyor
       if (addressCheck == 0) {
+        print("adres okay");
         await setCompanyInfo();
+
+        // 2) adres başka biri tarafından kullanımda
       } else if (addressCheck == 1) {
+        print("adres kullanımda");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                "Adres başka biri tarafından kullanılıyor. Lütfen yeni bir dijital menü adresi seçin"),
+                "Adres başka biri tarafından kullanılıyor. Lütfen yeni bir sijital menü adresi seçin"),
           ),
         );
+        // 3) firebase bağlantı hatası
       } else if (addressCheck == 2) {
         showDialog(
           context: context,
@@ -127,7 +176,7 @@ class _InitializationPage extends State<InitializationPage> {
                 TextButton(
                   child: const Text("Tamam"),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(); // Dialog'u kapat
                   },
                 ),
               ],
