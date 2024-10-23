@@ -68,7 +68,10 @@ class _LoginFirstPage extends State<LoginFirstPage> {
           } else {
             // Kullanıcı var mı kontrolü
             if (snapshot.data == true) {
-              return const EditMenuPage(); // Kullanıcı mevcut
+              // BUNU EKLEDİM -SERKAN
+              return EditMenuPage(
+                userKey: user.uid,
+              ); // Kullanıcı mevcut
             } else {
               return InitializationPage(
                 userKey: user.uid,
