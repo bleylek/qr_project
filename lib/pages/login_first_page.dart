@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qrproject/pages/edit_menu_page/edit_menu_page.dart';
+import 'package:qrproject/pages/edit_main_header_page/edit_main_header.dart';
 import 'package:qrproject/pages/initialization_page/initialization_page.dart';
 import 'package:qrproject/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,8 +15,7 @@ class LoginFirstPage extends StatefulWidget {
 class _LoginFirstPage extends State<LoginFirstPage> {
   Future<bool> userExists(String userId) async {
     // Kullanıcı ID'sinin Users koleksiyonunda mevcut olup olmadığını kontrol et
-    final querySnapshot =
-        await FirebaseFirestore.instance.collection('Users').doc(userId).get();
+    final querySnapshot = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
 
     // Eğer belge varsa true, yoksa false döndür
     return querySnapshot.exists;
@@ -48,8 +47,7 @@ class _LoginFirstPage extends State<LoginFirstPage> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child:
-                const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -69,7 +67,7 @@ class _LoginFirstPage extends State<LoginFirstPage> {
             // Kullanıcı var mı kontrolü
             if (snapshot.data == true) {
               // BUNU EKLEDİM -SERKAN
-              return EditMenuPage(
+              return EditMainHeader(
                 userKey: user.uid,
               ); // Kullanıcı mevcut
             } else {
