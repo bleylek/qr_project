@@ -26,58 +26,32 @@ class _LoginFirstPage extends State<LoginFirstPage> {
     // Oturum açmış kullanıcıyı al
     final user = FirebaseAuth.instance.currentUser;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Çıkış Yap'),
-        automaticallyImplyLeading: false, // Geri butonunu gizle
-        actions: [
-          ElevatedButton(
-            onPressed: () async {
-              await AuthService().signout();
-              // Çıkış yaptıktan sonra giriş sayfasına yönlendir
-              // burayı değiştir --> anasayfaya yönlendir
-              // mounted kontrolü
-              if (!mounted) return;
-              Navigator.pushReplacementNamed(context, '/auth');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-      body: FutureBuilder<bool>(
-        future: userExists(user!.uid), // Kullanıcı var mı kontrolü
-        builder: (context, snapshot) {
-          // firestore'a istek attık, in progress'de
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-            // request'den hata aldık
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Hata oluştu: ${snapshot.error}"));
-            // hata da almadık in progress'de de değiliz
+    return FutureBuilder<bool>(
+      future: userExists(user!.uid), // Kullanıcı var mı kontrolü
+      builder: (context, snapshot) {
+        // firestore'a istek attık, in progress'de
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+          // request'den hata aldık
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Hata oluştu: ${snapshot.error}"));
+          // hata da almadık in progress'de de değiliz
+        } else {
+          // Kullanıcı var mı kontrolü
+          if (snapshot.data == true) {
+            // BUNU EKLEDİM -SERKAN
+            return EditMainHeader(
+              userKey: user.uid,
+            ); // Kullanıcı mevcut
           } else {
-            // Kullanıcı var mı kontrolü
-            if (snapshot.data == true) {
-              // BUNU EKLEDİM -SERKAN
-              return EditMainHeader(
-                userKey: user.uid,
-              ); // Kullanıcı mevcut
-            } else {
-              return InitializationPage(
-                userKey: user.uid,
-              ); // Kullanıcı mevcut değil
-            }
+            return InitializationPage(
+              userKey: user.uid,
+            ); // Kullanıcı mevcut değil
           }
-        },
-      ),
+        }
+      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qrproject/models/firebase_fetch_model.dart';
+import 'package:qrproject/services/auth_service.dart';
 
 class EditMainHeader extends StatefulWidget {
   const EditMainHeader({super.key, required this.userKey});
@@ -32,6 +33,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
           ),
         );
       }
+      mainHeaders.sort((a, b) => a.order.compareTo(b.order));
     } else {
       // do nothing --> List<MainHeader> mainHeaders = [] will be remained like this
       // mainHeaders.isEmpty ile check edilir
@@ -61,7 +63,32 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Çıkış Yap'),
+        automaticallyImplyLeading: false, // Geri butonunu gizle
+        actions: [
+          ElevatedButton(
+            onPressed: () async {
+              await AuthService().signout();
+              // Çıkış yaptıktan sonra giriş sayfasına yönlendir
+              // burayı değiştir --> anasayfaya yönlendir
+              // mounted kontrolü
+              if (!mounted) return;
+              Navigator.pushReplacementNamed(context, '/auth');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+      body: const Text("data"),
+    );
   }
 }

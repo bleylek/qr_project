@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:qrproject/pages/edit_main_header_page/edit_main_header.dart';
+import 'package:qrproject/services/auth_service.dart';
 
 class InitializationPage extends StatefulWidget {
   InitializationPage({super.key, required this.userKey});
@@ -183,8 +184,28 @@ class _InitializationPage extends State<InitializationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Company Setup"),
-        elevation: 0,
+        title: const Text('Çıkış Yap'),
+        automaticallyImplyLeading: false, // Geri butonunu gizle
+        actions: [
+          ElevatedButton(
+            onPressed: () async {
+              await AuthService().signout();
+              // Çıkış yaptıktan sonra giriş sayfasına yönlendir
+              // burayı değiştir --> anasayfaya yönlendir
+              // mounted kontrolü
+              if (!mounted) return;
+              Navigator.pushReplacementNamed(context, '/auth');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
