@@ -15,7 +15,10 @@ class EditMainHeader extends StatefulWidget {
 class _EditMainHeaderState extends State<EditMainHeader> {
   final List<MainHeader> mainHeaders = [];
 
-  void _getDocumentFields() async {
+  // bunu future yapmamızın sebebi veriler yüklenmeden ekranın oluşmasını istemiyor oluşumuzdan kaynaklanıyor.
+  // sonunda setState yaparak ekranın güncellenmesini sağlayabilirdik. Fakat bu durumda ekran için oluşturulan build fonksiyonu iki kez
+  // çağrılmış olurdu.
+  Future<List<MainHeader>> _getDocumentFields() async {
     final mainHeadersCollection = FirebaseFirestore.instance.collection('DigitalAddress').doc(widget.userKey).collection("MainHeaders");
 
     final snapshot = await mainHeadersCollection.get();
@@ -53,17 +56,73 @@ class _EditMainHeaderState extends State<EditMainHeader> {
       print("correct way of checking");
     }
     */
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getDocumentFields();
+    return mainHeaders;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    print("main headers length can be seen here:");
+    print(mainHeaders.length);
+
+    return FutureBuilder(
+      future: _getDocumentFields(),
+      builder: (context, snapshot) {
+        // BURDAKİ EKRANLARI PROJE BİTİMİNDE DÜZENLE
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator()); // Yükleniyor göstergesi
+        } else if (snapshot.hasError) {
+          return const Center(child: Text("Bir hata oluştu")); // Hata mesajı
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Çıkış Yap'),
+              automaticallyImplyLeading: false, // Geri butonunu gizle
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    await AuthService().signout();
+                    // Çıkış yaptıktan sonra giriş sayfasına yönlendir
+                    // burayı değiştir --> anasayfaya yönlendir
+                    // mounted kontrolü
+                    if (!mounted) return;
+                    Navigator.pushReplacementNamed(context, '/auth');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: mainHeaders.length,
+                    itemBuilder: (context, index) {
+                      return Text(mainHeaders[index].mainHeaderName);
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Yeni main header ekle",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+      },
+    );
+
+    /* Scaffold(
       appBar: AppBar(
         title: const Text('Çıkış Yap'),
         automaticallyImplyLeading: false, // Geri butonunu gizle
@@ -88,7 +147,26 @@ class _EditMainHeaderState extends State<EditMainHeader> {
           ),
         ],
       ),
-      body: const Text("data"),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: mainHeaders.length,
+              itemBuilder: (context, index) {
+                return Text(mainHeaders[index].mainHeaderName);
+              },
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text(
+              "Yeni main header ekle",
+              style: TextStyle(color: Colors.black),
+            ),
+          )
+        ],
+      ),
     );
+    */
   }
 }
