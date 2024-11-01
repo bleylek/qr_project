@@ -1,160 +1,182 @@
-import 'package:flutter/material.dart';
-import 'package:qrproject/pages/anasayfa/home_page.dart';
-import 'package:qrproject/pages/fiyatlandirma/pricing.dart';
-import 'package:qrproject/pages/giris_sayfasi/login_page.dart';
-import 'package:qrproject/pages/kayit_olma_sayfasi/signup_page.dart';
-import 'package:qrproject/pages/ozellikler/features.dart';
-import 'package:qrproject/pages/referanslar/references.dart';
-import '../widgets/footer.dart'; // Footer import
+// Import necessary packages and custom components
+import 'package:flutter/material.dart'; // Core package for building UIs
+import 'package:qrproject/pages/anasayfa/home_page.dart'; // Import for Home Page
+import 'package:qrproject/pages/fiyatlandirma/pricing.dart'; // Import for Pricing Page
+import 'package:qrproject/pages/giris_sayfasi/login_page.dart'; // Import for Login Page
+import 'package:qrproject/pages/kayit_olma_sayfasi/signup_page.dart'; // Import for Signup Page
+import 'package:qrproject/pages/ozellikler/features.dart'; // Import for Features Page
+import 'package:qrproject/pages/referanslar/references.dart'; // Import for References Page
+import '../widgets/footer.dart'; // Import for Footer widget
 
+// Stateful widget that represents the authentication page
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
 
   @override
-  State<AuthPage> createState() => _AuthPageState();
+  State<AuthPage> createState() => _AuthPageState(); // Returns the associated state
 }
 
+// State class for managing the behavior and state of AuthPage
 class _AuthPageState extends State<AuthPage> {
+  // PageController for handling page transitions in the PageView
   final PageController _pageController = PageController();
 
-  // TextEditingController'lar
+  // TextEditingController instances for capturing email and password input
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Dispose method to clean up controllers when the widget is removed from the widget tree
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+    _emailController.dispose(); // Release the email controller's resources
+    _passwordController.dispose(); // Release the password controller's resources
+    super.dispose(); // Call the superclass dispose method
   }
 
   @override
   Widget build(BuildContext context) {
+    // Build the main UI structure of the page
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight), // Custom app bar height
         child: Container(
+          // Gradient decoration for the app bar background
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.purpleAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              colors: [Colors.blueAccent, Colors.purpleAccent], // Gradient colors
+              begin: Alignment.topLeft, // Start point of the gradient
+              end: Alignment.bottomRight, // End point of the gradient
             ),
           ),
+          // App bar with transparent background and no shadow
           child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
+            backgroundColor: Colors.transparent, // Transparent background
+            elevation: 0, // No shadow
             title: const Text(
-              "QR Menü",
+              "QR Menü", // Title of the app bar
               style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+                fontSize: 24, // Font size of the title
+                fontWeight: FontWeight.bold, // Font weight
+                color: Colors.white, // Text color
               ),
             ),
-            automaticallyImplyLeading: false, // Geri butonunu gizlemek için
+            automaticallyImplyLeading: false, // Hide the default back button
             actions: [
+              // Button for navigating to the Home Page
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()), // Navigate to HomePage
                   );
                 },
                 child: const Text(
-                  "Ana Sayfa",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  "Ana Sayfa", // "Home" in Turkish
+                  style: TextStyle(color: Colors.white, fontSize: 16), // Text style
                 ),
               ),
+              // Button for navigating to the Features Page
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const FeaturesPage()),
+                    MaterialPageRoute(builder: (context) => const FeaturesPage()), // Navigate to FeaturesPage
                   );
                 },
                 child: const Text(
-                  "Özellikler",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  "Özellikler", // "Features" in Turkish
+                  style: TextStyle(color: Colors.white, fontSize: 16), // Text style
                 ),
               ),
+              // Button for navigating to the Pricing Page
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const PricingPage()),
+                    MaterialPageRoute(builder: (context) => const PricingPage()), // Navigate to PricingPage
                   );
                 },
                 child: const Text(
-                  "Fiyatlandırma",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  "Fiyatlandırma", // "Pricing" in Turkish
+                  style: TextStyle(color: Colors.white, fontSize: 16), // Text style
                 ),
               ),
+              // Button for navigating to the References Page
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => ReferencesPage()),
+                    MaterialPageRoute(builder: (context) => ReferencesPage()), // Navigate to ReferencesPage
                   );
                 },
                 child: const Text(
-                  "Referanslar",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  "Referanslar", // "References" in Turkish
+                  style: TextStyle(color: Colors.white, fontSize: 16), // Text style
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 16), // Spacer for layout consistency
+
+              // Elevated button for navigating to the Login Page (via PageController)
               ElevatedButton(
                 onPressed: () {
-                  // Giriş sayfasına yönlendir (bu sayfa)
+                  _pageController.animateToPage(
+                    0, // Page index for Login Page
+                    duration: const Duration(milliseconds: 500), // Animation duration
+                    curve: Curves.easeInOut, // Animation curve for smooth transition
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
+                  backgroundColor: Colors.white, // Button background color
+                  foregroundColor: Colors.blueAccent, // Button text color
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20), // Rounded button shape
                   ),
                 ),
-                child: const Text("Giriş Yap"),
+                child: const Text("Giriş Yap"), // "Login" in Turkish
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 8), // Spacer between buttons
+
+              // Elevated button for navigating to the Signup Page (via PageController)
               ElevatedButton(
                 onPressed: () {
-                  // Kaydol sayfasına yönlendir
-                  _pageController.animateToPage(1,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut);
+                  _pageController.animateToPage(
+                    1, // Page index for Signup Page
+                    duration: const Duration(milliseconds: 500), // Animation duration
+                    curve: Curves.easeInOut, // Animation curve for smooth transition
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blueAccent,
+                  backgroundColor: Colors.white, // Button background color
+                  foregroundColor: Colors.blueAccent, // Button text color
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20), // Rounded button shape
                   ),
                 ),
-                child: const Text("Kayıt Ol"),
+                child: const Text("Kayıt Ol"), // "Sign Up" in Turkish
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 16), // Spacer for layout consistency
             ],
           ),
         ),
       ),
+      // Main body of the page with PageView and Footer
       body: Column(
         children: [
+          // Expanded widget to make PageView fill available space
           Expanded(
             child: PageView(
-              controller: _pageController,
+              controller: _pageController, // Controller for managing page navigation
               children: [
-                LoginPage(pageController: _pageController), // Giriş Yap sayfası
+                LoginPage(pageController: _pageController), // Login Page
                 SignupPage(
-                    pageController: _pageController,
-                    emailController: _emailController,
-                    passwordController: _passwordController), // Kaydol sayfası
+                  pageController: _pageController,
+                  emailController: _emailController,
+                  passwordController: _passwordController,
+                ), // Signup Page
               ],
             ),
           ),
-          const Footer(), // Footer'ı burada ekliyoruz
+          const Footer(), // Add footer at the bottom of the page
         ],
       ),
     );
