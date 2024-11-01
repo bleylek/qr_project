@@ -24,9 +24,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
   final GlobalKey<_IconButtonWidget> iconButtonKey = GlobalKey<_IconButtonWidget>();
 
   void _saveItem() async {
-    print("_SaveItem fonksiyonu içerisinde _______________________________________________");
     if (_addingForm.currentState!.validate()) {
-      print("validate içerisinde _______________________________________________");
       _addingForm.currentState!.save();
       final querySnapshot = await FirebaseFirestore.instance.collection('Users').doc(widget.userId).collection("MainHeaders").get();
 
@@ -35,7 +33,6 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
 
       for (var doc in querySnapshot.docs) {
         final docId = doc.id;
-
         final orderValue = doc.get('order');
 
         if (orderValue > maxOrder) {
@@ -44,14 +41,14 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
         if (docId == _newlyAddedmainHeaderName) {
           isNameUsed = true;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Bu mainHeader ismi kullanımda"),
+            SnackBar(
+              content: const Text("Bu mainHeader ismi kullanımda"),
+              backgroundColor: Colors.redAccent,
             ),
           );
         }
       }
-      print("_____________________________________________________");
-      print("_isNameUsed: ${!isNameUsed}");
+
       if (!isNameUsed) {
         Map<String, dynamic> newMainHeader = {
           'disable': iconButtonKey.currentState?.disableStatus ?? true,
@@ -75,55 +72,76 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Yeni mainHeader ekle"),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      title: const Text(
+        "Yeni Ana Başlık Ekle",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      ),
       content: Form(
         key: _addingForm,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: "Main Header Name",
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Bu alan boş bırakılamaz';
-                } else {
-                  for (MainHeader mainHeader in widget.mainHeaders) {
-                    if (mainHeader.mainHeaderName == value) {
-                      return "Bu mainHeaderName zaten kullanımda";
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: "Ana Başlık İsmi",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Bu alan boş bırakılamaz';
+                  } else {
+                    for (MainHeader mainHeader in widget.mainHeaders) {
+                      if (mainHeader.mainHeaderName == value) {
+                        return "Bu Ana Başlık ismi zaten kullanımda";
+                      }
                     }
                   }
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _newlyAddedmainHeaderName = value!;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            IconButtonWidget(key: iconButtonKey),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("İptal"),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                TextButton(
-                  onPressed: _saveItem,
-                  child: const Text("Kaydet"),
-                ),
-              ],
-            ),
-          ],
+                  return null;
+                },
+                onSaved: (value) {
+                  _newlyAddedmainHeaderName = value!;
+                },
+              ),
+              const SizedBox(height: 15),
+              IconButtonWidget(key: iconButtonKey),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      "İptal",
+                      style: TextStyle(color: Colors.redAccent, fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: _saveItem,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Kaydet",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -131,9 +149,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
 }
 
 class IconButtonWidget extends StatefulWidget {
-  const IconButtonWidget({
-    super.key,
-  });
+  const IconButtonWidget({super.key});
 
   @override
   State<IconButtonWidget> createState() {
@@ -151,6 +167,7 @@ class _IconButtonWidget extends State<IconButtonWidget> {
       icon: Icon(
         disable ? Icons.visibility : Icons.visibility_off,
         color: disable ? Colors.blue : Colors.grey,
+        size: 30,
       ),
       onPressed: () {
         setState(() {

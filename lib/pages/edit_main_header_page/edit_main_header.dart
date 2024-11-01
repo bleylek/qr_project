@@ -31,12 +31,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   }
 
   Future<void> _loadData() async {
-    // ilk önce userKey'e bağlı digitalMenuAddress'i almamız gerekiyor
-
-    // Users koleksiyonundaki tüm belgeleri getiriyoruz
     final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
-
-    // Belgeler arasında gezinerek userId'yi kontrol ediyoruz
     for (var doc in querySnapshot.docs) {
       final docId = doc.id;
       final underscoreIndex = docId.indexOf('_');
@@ -96,113 +91,126 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            color: Colors.blueAccent,
+          ),
+        ),
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Çıkış Yap'),
         automaticallyImplyLeading: false,
+        title: const Text('Menü Düzenle', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.blueAccent,
         actions: [
-          ElevatedButton(
+          IconButton(
+            icon: Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
               await AuthService().signout();
               if (!mounted) return;
               Navigator.pushReplacementNamed(context, '/auth');
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _mainHeaders.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Text(_mainHeaders[index].mainHeaderName),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Icon(
-                            _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
-                            color: _mainHeaders[index].disable ? Colors.blue : Colors.grey,
-                          ),
-                        ],
-                      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _mainHeaders.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) {
-                  return AddMainHeaderDialog(
-                    mainHeaders: _mainHeaders,
-                    userId: _userdId,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      title: Text(
+                        _mainHeaders[index].mainHeaderName,
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      ),
+                      trailing: Icon(
+                        _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
+                        color: _mainHeaders[index].disable ? Colors.green : Colors.redAccent,
+                      ),
+                      onTap: () {
+                        // Your onTap function here
+                      },
+                    ),
                   );
                 },
-              ).then((result) {
-                if (result != null) {
-                  bool disableStatus = result['disableStatus'];
-                  int maxOrder = result['maxOrder'];
-                  String newMainHeaderName = result['newMainHeaderName'];
-
-                  setState(() {
-                    _mainHeaders.add(
-                      MainHeader(
-                        mainHeaderName: newMainHeaderName,
-                        order: maxOrder,
-                        disable: disableStatus,
-                        imageUrl: "",
-                      ),
+              ),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton.icon(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return AddMainHeaderDialog(
+                      mainHeaders: _mainHeaders,
+                      userId: _userdId,
                     );
-                  });
-                }
-              });
-            },
-            child: const Text(
-              "Yeni main header ekle",
-              style: TextStyle(color: Colors.black),
+                  },
+                ).then((result) {
+                  if (result != null) {
+                    bool disableStatus = result['disableStatus'];
+                    int maxOrder = result['maxOrder'];
+                    String newMainHeaderName = result['newMainHeaderName'];
+
+                    setState(() {
+                      _mainHeaders.add(
+                        MainHeader(
+                          mainHeaderName: newMainHeaderName,
+                          order: maxOrder,
+                          disable: disableStatus,
+                          imageUrl: "",
+                        ),
+                      );
+                    });
+                  }
+                });
+              },
+              icon: Icon(Icons.add),
+              label: Text(
+                "Yeni Ana Başlık Ekle",
+                style: TextStyle(fontSize: 16),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text(
-              "Sırayı düzenle",
-              style: TextStyle(color: Colors.black),
+            SizedBox(height: 10),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Sırayı düzenle fonksiyonu burada olabilir.
+              },
+              icon: Icon(Icons.reorder),
+              label: Text(
+                "Sırayı Düzenle",
+                style: TextStyle(fontSize: 16),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: Colors.orangeAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
