@@ -31,7 +31,6 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   }
 
   void _removeMainHeader(MainHeader mainHeader, List<MainHeader> mainHeaders) async {
-    // Progress indicator göstermek için bir durum değişkeni
     setState(() {
       isLoading = true;
     });
@@ -49,26 +48,21 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
         if (currentMainHeader.mainHeaderName == mainHeader.mainHeaderName) {
           mainHeaders.removeAt(i);
-          i--; // Adjust index after removal to continue iterating correctly
+          i--;
         }
       }
 
-      // Firestore'dan belgeyi silme işlemi
       await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("MainHeaders").doc(mainHeader.mainHeaderName).delete();
 
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      // Başarı mesajı
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${mainHeader.mainHeaderName} başarıyla silindi')),
       );
     } catch (e) {
-      // Hata durumunda bir mesaj göstermek
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bir hata oluştu: $e')),
       );
     } finally {
-      // İşlem tamamlandıktan sonra Progress Indicator'ı kaldırmak
       setState(() {
         isLoading = false;
       });
@@ -76,12 +70,8 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   }
 
   Future<void> _loadData() async {
-    // ilk önce userKey'e bağlı digitalMenuAddress'i almamız gerekiyor
-
-    // Users koleksiyonundaki tüm belgeleri getiriyoruz
     final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
 
-    // Belgeler arasında gezinerek userId'yi kontrol ediyoruz
     for (var doc in querySnapshot.docs) {
       final docId = doc.id;
       final underscoreIndex = docId.indexOf('_');
@@ -146,7 +136,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Çıkış Yap'),
+        title: const Text('Ana Başlıkları Düzenle'),
         automaticallyImplyLeading: false,
         actions: [
           ElevatedButton(
@@ -157,7 +147,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blueAccent,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -166,79 +156,129 @@ class _EditMainHeaderState extends State<EditMainHeader> {
           ),
         ],
       ),
-      body: Column(
+      body: Row(
         children: [
+          // Sol tarafta ana başlıklar için alan
           Expanded(
-            child: ListView.builder(
-              itemCount: _mainHeaders.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
+            flex: 2, // Sol tarafın genişliğini ayarlamak için
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1, // Tek sütunlu grid
+                        mainAxisSpacing: 16, // Yatay boşluk
+                        childAspectRatio: 3, // Kartın yüksekliği
                       ),
-                      child: Row(
-                        children: [
-                          Text(_mainHeaders[index].mainHeaderName),
-                          const SizedBox(
-                            width: 15,
+                      itemCount: _mainHeaders.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          Icon(
-                            _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
-                            color: _mainHeaders[index].disable ? Colors.blue : Colors.grey,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Onayla'),
-                                    content: Text("${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir."),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(); // İptal işlemi için dialogu kapat
-                                        },
-                                        child: Text('İptal'),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        _mainHeaders[index].mainHeaderName,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(); // Dialogu kapat
-                                          _removeMainHeader(_mainHeaders[index], _mainHeaders); // Silme işlemi
-
-                                          setState(() {}); // UI güncelle
-                                          print("after delete, the length of mainHeaders list: ${_mainHeaders.length}");
-                                          for (var mainHeader in _mainHeaders) {
-                                            print("after delete new mainHeaderName: ${mainHeader.mainHeaderName} and order: ${mainHeader.order}");
-                                          }
-                                        },
-                                        child: const Text('Devam et'),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close, color: Colors.redAccent),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Onayla'),
+                                              content: Text(
+                                                "${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir.",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('İptal'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    _removeMainHeader(_mainHeaders[index], _mainHeaders);
+                                                    setState(() {});
+                                                  },
+                                                  child: const Text('Devam et'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
+                                      color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        _mainHeaders[index].disable ? "Görünür" : "Gizli",
+                                        style: TextStyle(
+                                          color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             ),
           ),
-          ElevatedButton(
+          // Sağ tarafta telefon görseli için alan
+          Expanded(
+            flex: 1, // Sağ tarafın genişliğini ayarlamak için
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset(
+                'assets/phone_mockup.png', // Görselin yolu (assets klasörünüzde olmalı)
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
             onPressed: () {
               showDialog(
                 context: context,
@@ -268,20 +308,16 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                 }
               });
             },
-            child: const Text(
-              "Yeni main header ekle",
-              style: TextStyle(color: Colors.black),
-            ),
+            icon: const Icon(Icons.add),
+            label: const Text("Yeni Ekle"),
+            backgroundColor: Colors.blueAccent,
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
+          const SizedBox(width: 16),
+          FloatingActionButton.extended(
             onPressed: () {},
-            child: const Text(
-              "Sırayı düzenle",
-              style: TextStyle(color: Colors.black),
-            ),
+            icon: const Icon(Icons.reorder),
+            label: const Text("Sırayı Düzenle"),
+            backgroundColor: Colors.blueAccent,
           ),
         ],
       ),

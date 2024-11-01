@@ -41,8 +41,8 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
         if (docId == _newlyAddedmainHeaderName) {
           isNameUsed = true;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text("Bu mainHeader ismi kullanımda"),
+            const SnackBar(
+              content: Text("Bu mainHeader ismi kullanımda"),
               backgroundColor: Colors.redAccent,
             ),
           );
@@ -77,7 +77,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
       ),
       title: const Text(
         "Yeni Ana Başlık Ekle",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
       ),
       content: Form(
         key: _addingForm,
@@ -85,11 +85,25 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Modern giriş alanı
               TextFormField(
                 decoration: InputDecoration(
                   labelText: "Ana Başlık İsmi",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  labelStyle: TextStyle(
+                    color: Colors.blueAccent,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.blueAccent),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.redAccent),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 validator: (value) {
@@ -109,8 +123,19 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
                 },
               ),
               const SizedBox(height: 15),
-              IconButtonWidget(key: iconButtonKey),
+              // Modern ikon butonu
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Görünürlük Ayarı",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  IconButtonWidget(key: iconButtonKey), // Sağda ikon
+                ],
+              ),
               const SizedBox(height: 20),
+              // Modern butonlar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -130,7 +155,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
                       backgroundColor: Colors.blueAccent,
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: const Text(
@@ -148,6 +173,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
   }
 }
 
+// Göz ikonu için modern widget
 class IconButtonWidget extends StatefulWidget {
   const IconButtonWidget({super.key});
 
@@ -166,7 +192,7 @@ class _IconButtonWidget extends State<IconButtonWidget> {
     return IconButton(
       icon: Icon(
         disable ? Icons.visibility : Icons.visibility_off,
-        color: disable ? Colors.blue : Colors.grey,
+        color: disable ? Colors.blueAccent : Colors.grey,
         size: 30,
       ),
       onPressed: () {
