@@ -8,14 +8,12 @@ class MainHeader {
     // imageUrl: null == ""
     this.imageUrl = "", // image url
     required this.disable, // show or not
-    this.orderChanged = false,
   });
 
-  final String mainHeaderName;
-  final int order;
-  final String imageUrl;
-  final bool disable;
-  final bool orderChanged;
+  String mainHeaderName;
+  int order;
+  String imageUrl;
+  bool disable;
 }
 
 // Türk Kahvesi

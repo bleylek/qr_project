@@ -16,7 +16,7 @@ class EditMainHeader extends StatefulWidget {
 class _EditMainHeaderState extends State<EditMainHeader> {
   final List<MainHeader> _mainHeaders = [];
   String _digitalMenuAddress = "";
-  String _userdId = "";
+  String _userId = "";
   String _companyName = "";
   String _mailAddress = "";
   String _phoneNumber = "";
@@ -28,6 +28,51 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  void _removeMainHeader(MainHeader mainHeader, List<MainHeader> mainHeaders) async {
+    // Progress indicator göstermek için bir durum değişkeni
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      int mainHeaderOrder = mainHeader.order;
+
+      for (int i = 0; i < mainHeaders.length; i++) {
+        MainHeader currentMainHeader = mainHeaders[i];
+
+        if (currentMainHeader.order > mainHeaderOrder) {
+          currentMainHeader.order -= 1;
+          FirebaseFirestore.instance.collection('Users').doc(_userId).collection("MainHeaders").doc(currentMainHeader.mainHeaderName).update({'order': currentMainHeader.order});
+        }
+
+        if (currentMainHeader.mainHeaderName == mainHeader.mainHeaderName) {
+          mainHeaders.removeAt(i);
+          i--; // Adjust index after removal to continue iterating correctly
+        }
+      }
+
+      // Firestore'dan belgeyi silme işlemi
+      await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("MainHeaders").doc(mainHeader.mainHeaderName).delete();
+
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      // Başarı mesajı
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${mainHeader.mainHeaderName} başarıyla silindi')),
+      );
+    } catch (e) {
+      // Hata durumunda bir mesaj göstermek
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Bir hata oluştu: $e')),
+      );
+    } finally {
+      // İşlem tamamlandıktan sonra Progress Indicator'ı kaldırmak
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadData() async {
@@ -45,12 +90,12 @@ class _EditMainHeaderState extends State<EditMainHeader> {
         final afterUnderscore = docId.substring(underscoreIndex + 1);
         if (afterUnderscore == widget.userKey) {
           _digitalMenuAddress = docId.substring(0, underscoreIndex);
-          _userdId = "${_digitalMenuAddress}_${widget.userKey}";
+          _userId = "${_digitalMenuAddress}_${widget.userKey}";
         }
       }
     }
 
-    final usersCollection = FirebaseFirestore.instance.collection('Users').doc(_userdId);
+    final usersCollection = FirebaseFirestore.instance.collection('Users').doc(_userId);
 
     try {
       final docSnapshot = await usersCollection.get();
@@ -149,6 +194,42 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                             _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
                             color: _mainHeaders[index].disable ? Colors.blue : Colors.grey,
                           ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Onayla'),
+                                    content: Text("${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir."),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // İptal işlemi için dialogu kapat
+                                        },
+                                        child: Text('İptal'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // Dialogu kapat
+                                          _removeMainHeader(_mainHeaders[index], _mainHeaders); // Silme işlemi
+
+                                          setState(() {}); // UI güncelle
+                                          print("after delete, the length of mainHeaders list: ${_mainHeaders.length}");
+                                          for (var mainHeader in _mainHeaders) {
+                                            print("after delete new mainHeaderName: ${mainHeader.mainHeaderName} and order: ${mainHeader.order}");
+                                          }
+                                        },
+                                        child: const Text('Devam et'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -165,7 +246,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                 builder: (context) {
                   return AddMainHeaderDialog(
                     mainHeaders: _mainHeaders,
-                    userId: _userdId,
+                    userId: _userId,
                   );
                 },
               ).then((result) {
