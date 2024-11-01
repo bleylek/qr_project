@@ -35,51 +35,26 @@ class _InitializationPage extends State<InitializationPage> {
     _selectedCurrency = _currencies[0];
   }
 
-  Future<int> checkDigitalMenuAddress(String userKey, String digitalMenuAddress) async {
-    print("Fonksiyon içerisinde________");
+  Future<int> checkDigitalMenuAddress(String digitalMenuAddress) async {
     try {
-      // Firestore referansını al
-      final firestore = FirebaseFirestore.instance;
-
-      // DigitalAddress koleksiyonunu sorgula
-      final querySnapshot = await firestore.collection('DigitalAddress').get();
-
-      print("querySnapshot");
-      print(querySnapshot);
-      print("__");
-
-      // Koleksiyon boşsa
-      if (querySnapshot.docs.isEmpty) {
-        print("koleksiyon boş");
-        return 0; // Koleksiyon boş
-      }
-
-      // Belirtilen adresin belgeler içinde olup olmadığını kontrol et
-
-      final addressSnapshot = await firestore.collection('DigitalAddress').doc(userKey).get();
-
-      // Eğer belge bulunursa adres kullanımda demektir
-
-      /*
-      Burda bir yanlışlık yapmışım. Bu if statementına bir || getirmek istiyorum. Bu ||'da şunu kontrol edecek:
-      DigitalAddress collectionun'daki userKey'e sahip herkeste DigitalMenuAddress adında
-      bir field var. Yani DigitalAddress (collection) --> userKey (doc) --> DigitalMenuAddress (field)
-      bu field'larda eğer bizim parametremiz olan digitalMenuAddress varsa yine 1 döndüreceğiz
-      */
-      if (addressSnapshot.exists) {
-        return 1; // Adres kullanımda
-      }
+      final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
 
       for (var doc in querySnapshot.docs) {
-        if (doc.exists && doc.data().containsKey("DigitalMenuAddress")) {
-          if (doc.get("DigitalMenuAddress") == digitalMenuAddress) {
-            return 1;
+        final docId = doc.id;
+        // İlk "_" karakterinin pozisyonunu buluyoruz
+        final underscoreIndex = docId.indexOf('_');
+
+        // Eğer "_" varsa, öncesindeki kısmı alıyoruz
+        if (underscoreIndex != -1) {
+          final beforeUnderscore = docId.substring(0, underscoreIndex);
+
+          // Eğer "_" öncesindeki kısım digitalMenuAddress ile eşleşiyorsa
+          if (beforeUnderscore == digitalMenuAddress) {
+            return 1; // Eşleşme bulundu
           }
         }
       }
-
-      // Adres koleksiyonda yoksa
-      return 0; // Adres kullanımda değil
+      return 0; // Hiçbir eşleşme bulunmadı
     } catch (e) {
       // Hata durumunda hata mesajını konsola yazdır
       print("Firebase bağlantı hatası: $e");
@@ -88,38 +63,26 @@ class _InitializationPage extends State<InitializationPage> {
   }
 
   Future<void> setCompanyInfo() async {
-    var collectionRef = FirebaseFirestore.instance.collection('Users').doc(widget.userKey);
+    var collectionRef = FirebaseFirestore.instance.collection('Users').doc("${_digitalMenuAddress}_${widget.userKey}");
 
     Map<String, dynamic> companyInfo = {
       'CompanyName': _companyName,
-      'DigitalMenuAddress': _digitalMenuAddress,
       'MailAddress': _mailAddress,
       'PhoneNumber': '$selectedCountryCode$_phoneWithoutCountryCode',
-    };
-
-    var digitalMenuAddressRef = FirebaseFirestore.instance.collection("DigitalAddress").doc(widget.userKey);
-
-    Map<String, dynamic> digitalAddressInfo = {
       'MenuLanguage': _selectedLanguage,
       'MenuMoneyCurrency': _selectedCurrency,
-      'DigitalMenuAddress': _digitalMenuAddress,
     };
 
     try {
-      // Transaction kullanarak her iki işlemi atomik hale getir
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        // Digital address bilgilerini Firebase'e gönder
-        transaction.set(digitalMenuAddressRef, digitalAddressInfo, SetOptions(merge: true));
+      // Verileri Firebase'e gönderiyoruz
+      await collectionRef.set(companyInfo);
 
-        // Verileri Firebase'e gönder
-        transaction.set(collectionRef, companyInfo, SetOptions(merge: true));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditMainHeader(userKey: widget.userKey),
-          ),
-        );
-      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditMainHeader(userKey: widget.userKey),
+        ),
+      );
 
       print("Veriler başarıyla Firebase'e gönderildi.");
     } catch (e) {
@@ -135,14 +98,10 @@ class _InitializationPage extends State<InitializationPage> {
       });
 
       // Adres kontrolü için asenkron fonksiyonu çağır
-      int addressCheck = await checkDigitalMenuAddress(widget.userKey, _digitalMenuAddress);
+      int addressCheck = await checkDigitalMenuAddress(_digitalMenuAddress);
 
       // Hala mounted ise setState ve context işlemlerini kullan
       if (!mounted) return;
-
-      setState(() {
-        isLoading = false; // İşlem bittiğinde loading durumunu kaldır
-      });
 
       // 1) adres kimse tarafından kullanılmıyor
       if (addressCheck == 0) {
@@ -154,7 +113,7 @@ class _InitializationPage extends State<InitializationPage> {
         print("adres kullanımda");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Adres başka biri tarafından kullanılıyor. Lütfen yeni bir sijital menü adresi seçin"),
+            content: Text("Adres başka biri tarafından kullanılıyor. Lütfen yeni bir dijital menü adresi seçin"),
           ),
         );
         // 3) firebase bağlantı hatası
@@ -178,6 +137,9 @@ class _InitializationPage extends State<InitializationPage> {
         );
       }
     }
+    setState(() {
+      isLoading = false; // İşlem bittiğinde loading durumunu kaldır
+    });
   }
 
   @override
@@ -241,7 +203,7 @@ class _InitializationPage extends State<InitializationPage> {
                           _buildTextField(
                               label: "Digital Menu Address",
                               inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9-_]')),
+                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
                               ],
                               validator: (value) {
                                 if (value == null || value.isEmpty) {

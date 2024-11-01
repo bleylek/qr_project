@@ -14,11 +14,32 @@ class LoginFirstPage extends StatefulWidget {
 
 class _LoginFirstPage extends State<LoginFirstPage> {
   Future<bool> userExists(String userId) async {
-    // Kullanıcı ID'sinin Users koleksiyonunda mevcut olup olmadığını kontrol et
-    final querySnapshot = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
+    try {
+      // Users koleksiyonundaki tüm belgeleri getiriyoruz
+      final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
 
-    // Eğer belge varsa true, yoksa false döndür
-    return querySnapshot.exists;
+      // Belgeler arasında gezinerek userId'yi kontrol ediyoruz
+      for (var doc in querySnapshot.docs) {
+        final docId = doc.id;
+        // İlk "_" karakterinin pozisyonunu buluyoruz
+        final underscoreIndex = docId.indexOf('_');
+
+        // Eğer "_" varsa, sonrasındaki tüm kısmı alıyoruz
+        if (underscoreIndex != -1) {
+          final afterUnderscore = docId.substring(underscoreIndex + 1);
+          // "_" karakterinden sonra gelen kısmın tamamını userId ile karşılaştırıyoruz
+          if (afterUnderscore == userId) {
+            print("Kullanıcı mevcut");
+            print(afterUnderscore);
+            return true; // Eşleşme varsa true döndür
+          }
+        }
+      }
+      return false; // Hiçbir eşleşme yoksa false döndür
+    } catch (e) {
+      print('Error checking user existence: $e');
+      return false;
+    }
   }
 
   @override

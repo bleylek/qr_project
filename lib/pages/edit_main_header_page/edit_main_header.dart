@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qrproject/models/firebase_fetch_model.dart';
 import 'package:qrproject/services/auth_service.dart';
+import 'package:qrproject/widgets/add_main_header_dialog.dart';
 
 class EditMainHeader extends StatefulWidget {
   const EditMainHeader({super.key, required this.userKey});
@@ -13,126 +14,99 @@ class EditMainHeader extends StatefulWidget {
 }
 
 class _EditMainHeaderState extends State<EditMainHeader> {
-  final List<MainHeader> mainHeaders = [];
+  final List<MainHeader> _mainHeaders = [];
+  String _digitalMenuAddress = "";
+  String _userdId = "";
+  String _companyName = "";
+  String _mailAddress = "";
+  String _phoneNumber = "";
+  String _menuLanguage = "";
+  String _menuMoneyCurrency = "";
+  bool isLoading = true;
 
-  // bunu future yapmamızın sebebi veriler yüklenmeden ekranın oluşmasını istemiyor oluşumuzdan kaynaklanıyor.
-  // sonunda setState yaparak ekranın güncellenmesini sağlayabilirdik. Fakat bu durumda ekran için oluşturulan build fonksiyonu iki kez
-  // çağrılmış olurdu.
-  Future<List<MainHeader>> _getDocumentFields() async {
-    final mainHeadersCollection = FirebaseFirestore.instance.collection('DigitalAddress').doc(widget.userKey).collection("MainHeaders");
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
 
-    final snapshot = await mainHeadersCollection.get();
+  Future<void> _loadData() async {
+    // ilk önce userKey'e bağlı digitalMenuAddress'i almamız gerekiyor
 
-    if (snapshot.docs.isNotEmpty) {
-      for (var doc in snapshot.docs) {
-        final data = doc.data();
+    // Users koleksiyonundaki tüm belgeleri getiriyoruz
+    final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
 
-        mainHeaders.add(
-          MainHeader(
-            mainHeaderName: doc.id,
-            order: data['order'],
-            disable: data['disable'],
-            imageUrl: data['imageUrl'],
-          ),
-        );
+    // Belgeler arasında gezinerek userId'yi kontrol ediyoruz
+    for (var doc in querySnapshot.docs) {
+      final docId = doc.id;
+      final underscoreIndex = docId.indexOf('_');
+
+      if (underscoreIndex != -1) {
+        final afterUnderscore = docId.substring(underscoreIndex + 1);
+        if (afterUnderscore == widget.userKey) {
+          _digitalMenuAddress = docId.substring(0, underscoreIndex);
+          _userdId = "${_digitalMenuAddress}_${widget.userKey}";
+        }
       }
-      mainHeaders.sort((a, b) => a.order.compareTo(b.order));
-    } else {
-      // do nothing --> List<MainHeader> mainHeaders = [] will be remained like this
-      // mainHeaders.isEmpty ile check edilir
-      print("no mainHeader");
     }
 
-    for (var header in mainHeaders) {
-      print("Main Header Name: ${header.mainHeaderName}");
-      print("Order: ${header.order}");
-      print("Disable: ${header.disable}");
-      print("Image URL: ${header.imageUrl}");
-      print("-----------");
+    final usersCollection = FirebaseFirestore.instance.collection('Users').doc(_userdId);
+
+    try {
+      final docSnapshot = await usersCollection.get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        _companyName = data?['CompanyName'] ?? "";
+        _mailAddress = data?['MailAddress'] ?? "";
+        _phoneNumber = data?['PhoneNumber'] ?? "";
+        _menuLanguage = data?['MenuLanguage'] ?? "";
+        _menuMoneyCurrency = data?['MenuMoneyCurrency'] ?? "";
+
+        final mainHeadersCollection = usersCollection.collection("MainHeaders");
+        final mainHeadersSnapshot = await mainHeadersCollection.get();
+
+        for (var doc in mainHeadersSnapshot.docs) {
+          final data = doc.data();
+          bool disable = data['disable'] ?? false;
+          String imageUrl = data['imageUrl'] ?? "";
+          int order = data['order'] ?? 0;
+
+          _mainHeaders.add(
+            MainHeader(
+              mainHeaderName: doc.id,
+              order: order,
+              disable: disable,
+              imageUrl: imageUrl,
+            ),
+          );
+        }
+      } else {
+        print("Belirtilen kullanıcı bulunamadı.");
+      }
+    } catch (e) {
+      print("Firebase'den veri alınırken hata oluştu: $e");
     }
 
-    /*
-    if (mainHeaders.isEmpty) {
-      print("correct way of checking");
-    }
-    */
-    return mainHeaders;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("main headers length can be seen here:");
-    print(mainHeaders.length);
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-    return FutureBuilder(
-      future: _getDocumentFields(),
-      builder: (context, snapshot) {
-        // BURDAKİ EKRANLARI PROJE BİTİMİNDE DÜZENLE
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator()); // Yükleniyor göstergesi
-        } else if (snapshot.hasError) {
-          return const Center(child: Text("Bir hata oluştu")); // Hata mesajı
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Çıkış Yap'),
-              automaticallyImplyLeading: false, // Geri butonunu gizle
-              actions: [
-                ElevatedButton(
-                  onPressed: () async {
-                    await AuthService().signout();
-                    // Çıkış yaptıktan sonra giriş sayfasına yönlendir
-                    // burayı değiştir --> anasayfaya yönlendir
-                    // mounted kontrolü
-                    if (!mounted) return;
-                    Navigator.pushReplacementNamed(context, '/auth');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
-                ),
-              ],
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: mainHeaders.length,
-                    itemBuilder: (context, index) {
-                      return Text(mainHeaders[index].mainHeaderName);
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Yeni main header ekle",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-      },
-    );
-
-    /* Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Çıkış Yap'),
-        automaticallyImplyLeading: false, // Geri butonunu gizle
+        automaticallyImplyLeading: false,
         actions: [
           ElevatedButton(
             onPressed: () async {
               await AuthService().signout();
-              // Çıkış yaptıktan sonra giriş sayfasına yönlendir
-              // burayı değiştir --> anasayfaya yönlendir
-              // mounted kontrolü
               if (!mounted) return;
               Navigator.pushReplacementNamed(context, '/auth');
             },
@@ -151,22 +125,85 @@ class _EditMainHeaderState extends State<EditMainHeader> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: mainHeaders.length,
+              itemCount: _mainHeaders.length,
               itemBuilder: (context, index) {
-                return Text(mainHeaders[index].mainHeaderName);
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(_mainHeaders[index].mainHeaderName),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Icon(
+                            _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
+                            color: _mainHeaders[index].disable ? Colors.blue : Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return AddMainHeaderDialog(
+                    mainHeaders: _mainHeaders,
+                    userId: _userdId,
+                  );
+                },
+              ).then((result) {
+                if (result != null) {
+                  bool disableStatus = result['disableStatus'];
+                  int maxOrder = result['maxOrder'];
+                  String newMainHeaderName = result['newMainHeaderName'];
+
+                  setState(() {
+                    _mainHeaders.add(
+                      MainHeader(
+                        mainHeaderName: newMainHeaderName,
+                        order: maxOrder,
+                        disable: disableStatus,
+                        imageUrl: "",
+                      ),
+                    );
+                  });
+                }
+              });
+            },
             child: const Text(
               "Yeni main header ekle",
               style: TextStyle(color: Colors.black),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text(
+              "Sırayı düzenle",
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
         ],
       ),
     );
-    */
   }
 }
