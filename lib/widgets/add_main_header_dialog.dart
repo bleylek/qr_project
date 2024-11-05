@@ -89,7 +89,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: "Ana Başlık İsmi",
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                     color: Colors.blueAccent,
                     fontWeight: FontWeight.w500,
                   ),
@@ -160,7 +160,7 @@ class _AddMainHeaderDialogState extends State<AddMainHeaderDialog> {
                     ),
                     child: const Text(
                       "Kaydet",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   ),
                 ],
