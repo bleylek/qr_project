@@ -1,64 +1,100 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qrproject/models/firebase_fetch_model.dart';
+import 'package:qrproject/pages/edit_sub_header.dart';
 import 'package:qrproject/services/auth_service.dart';
-import 'package:qrproject/widgets/add_main_header_dialog.dart';
-import 'package:qrproject/widgets/re_order.dart';
+import 'package:qrproject/widgets/add_item_dialog.dart';
+import 'package:qrproject/widgets/re_order_items.dart';
 
-class EditMainHeader extends StatefulWidget {
-  const EditMainHeader({super.key, required this.userKey});
+class EditItem extends StatefulWidget {
+  const EditItem({
+    super.key,
+    required this.userKey,
+    required this.mainHeaderName,
+    required this.digitalMenuAddress,
+    required this.companyName,
+    required this.mailAddress,
+    required this.phoneNumber,
+    required this.menuLanguage,
+    required this.menuMoneyCurrency,
+  });
 
   final String userKey;
+  final String mainHeaderName;
+  final String digitalMenuAddress;
+  final String companyName;
+  final String mailAddress;
+  final String phoneNumber;
+  final String menuLanguage;
+  final String menuMoneyCurrency;
 
   @override
-  State<EditMainHeader> createState() => _EditMainHeaderState();
+  State<EditItem> createState() => _EditItem();
 }
 
-class _EditMainHeaderState extends State<EditMainHeader> {
-  final List<MainHeader> _mainHeaders = [];
-  String _digitalMenuAddress = "";
-  String _userId = "";
-  String _companyName = "";
-  String _mailAddress = "";
-  String _phoneNumber = "";
-  String _menuLanguage = "";
-  String _menuMoneyCurrency = "";
+class _EditItem extends State<EditItem> {
+  final List<Item> _items = [];
+
   bool isLoading = true;
 
+  // burası ile ilgilendim
   @override
   void initState() {
+    print("edit_item initState içerisinde_______________");
+    print("userKey: ${widget.userKey}");
+    print("mainHeaderName: ${widget.mainHeaderName}");
+    print("digitalMenuAddress: ${widget.digitalMenuAddress}");
+    print("companyName: ${widget.companyName}");
+    print("mailAddress: ${widget.mailAddress}");
+    print("phoneNumber: ${widget.phoneNumber}");
+    print("menuLanguage: ${widget.menuLanguage}");
+    print("menuMoneyCurrency: ${widget.menuMoneyCurrency}");
     super.initState();
     _loadData();
   }
 
-  void _removeMainHeader(MainHeader mainHeader, List<MainHeader> mainHeaders) async {
+  void _removeItem(Item item, List<Item> items) async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      int mainHeaderOrder = mainHeader.order;
+      int itemOrder = item.order;
 
-      for (int i = 0; i < mainHeaders.length; i++) {
-        MainHeader currentMainHeader = mainHeaders[i];
+      for (int i = 0; i < items.length; i++) {
+        Item currentItem = items[i];
 
-        if (currentMainHeader.order > mainHeaderOrder) {
-          currentMainHeader.order -= 1;
-          FirebaseFirestore.instance.collection('Users').doc(_userId).collection("MainHeaders").doc(currentMainHeader.mainHeaderName).update({'order': currentMainHeader.order});
+        if (currentItem.order > itemOrder) {
+          currentItem.order -= 1;
+          FirebaseFirestore.instance.collection('Users').doc(widget.userKey).collection("Items").doc(currentItem.docId).update({'order': currentItem.order});
         }
 
-        if (currentMainHeader.mainHeaderName == mainHeader.mainHeaderName) {
-          mainHeaders.removeAt(i);
+        if (currentItem.itemName == item.itemName) {
+          items.removeAt(i);
           i--;
         }
       }
 
-      await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("MainHeaders").doc(mainHeader.mainHeaderName).delete();
+      await FirebaseFirestore.instance.collection('Users').doc(widget.userKey).collection("Items").doc("${widget.mainHeaderName}_${item.itemName}").delete();
 
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${mainHeader.mainHeaderName} başarıyla silindi')),
-      );
+      final subHeadersSnapshot = await FirebaseFirestore.instance.collection('Users').doc(widget.userKey).collection("SubHeaders").get();
+      for (var doc in subHeadersSnapshot.docs) {
+        final docId = doc.id; // itemName_subHeaderName
+        final underscoreIndex = docId.indexOf("_");
+
+        // itemName
+        final String beforeUnderscore = docId.substring(0, underscoreIndex);
+
+        // subHeaderName
+        final String afterUnderscore = docId.substring(underscoreIndex + 1);
+
+        if (underscoreIndex != -1) {
+          if (beforeUnderscore == item.itemName) {
+            await FirebaseFirestore.instance.collection('Users').doc(widget.userKey).collection("SubHeaders").doc(docId).delete();
+          }
+        }
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bir hata oluştu: $e')),
@@ -71,58 +107,54 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   }
 
   Future<void> _loadData() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
-
-    for (var doc in querySnapshot.docs) {
-      final docId = doc.id;
-      final underscoreIndex = docId.indexOf('_');
-
-      if (underscoreIndex != -1) {
-        final afterUnderscore = docId.substring(underscoreIndex + 1);
-        if (afterUnderscore == widget.userKey) {
-          _digitalMenuAddress = docId.substring(0, underscoreIndex);
-          _userId = "${_digitalMenuAddress}_${widget.userKey}";
-        }
-      }
-    }
-
-    final usersCollection = FirebaseFirestore.instance.collection('Users').doc(_userId);
+    final itemsCollection = FirebaseFirestore.instance.collection("Users").doc(widget.userKey).collection("Items");
 
     try {
-      final docSnapshot = await usersCollection.get();
+      final querySnapshot = await itemsCollection.get();
+      for (var doc in querySnapshot.docs) {
+        String docName = doc.id;
 
-      if (docSnapshot.exists) {
-        final data = docSnapshot.data();
-        _companyName = data?['CompanyName'] ?? "";
-        _mailAddress = data?['MailAddress'] ?? "";
-        _phoneNumber = data?['PhoneNumber'] ?? "";
-        _menuLanguage = data?['MenuLanguage'] ?? "";
-        _menuMoneyCurrency = data?['MenuMoneyCurrency'] ?? "";
-
-        final mainHeadersCollection = usersCollection.collection("MainHeaders");
-        final mainHeadersSnapshot = await mainHeadersCollection.get();
-
-        for (var doc in mainHeadersSnapshot.docs) {
+        if (docName.split('_').first == widget.mainHeaderName) {
           final data = doc.data();
-          bool disable = data['disable'] ?? false;
-          String imageUrl = data['imageUrl'] ?? "";
-          int order = data['order'] ?? 0;
 
-          _mainHeaders.add(
-            MainHeader(
-              mainHeaderName: doc.id,
+          String itemName = docName.split('_').skip(1).join('_');
+          int order = data['order'] ?? 0;
+          String imageUrl = data['imageUrl'] ?? "";
+          double price = (data['price'] as num).toDouble();
+          bool disable = data['disable'] ?? false;
+          bool blur = data['blur'] ?? false;
+          String explanation = data['explanation'] ?? "";
+
+          _items.add(
+            Item(
+              itemName: itemName,
               order: order,
               disable: disable,
+              blur: blur,
+              explanation: explanation,
               imageUrl: imageUrl,
+              price: price,
+              docId: "${widget.mainHeaderName}_$itemName",
             ),
           );
         }
-        _mainHeaders.sort((a, b) => a.order.compareTo(b.order));
-      } else {
-        print("Belirtilen kullanıcı bulunamadı.");
       }
+
+      _items.sort((a, b) => a.order.compareTo(b.order));
+      /*
+      for (Item item in _items) {
+        print("____________________item_________________________");
+        print("ItemName ${item.itemName}");
+        print("order ${item.order}");
+        print("disable ${item.disable}");
+        print("blur ${item.blur}");
+        print("explanation ${item.explanation}");
+        print("imageUrl ${item.imageUrl}");
+        print("price ${item.price}");
+      }
+      */
     } catch (e) {
-      print("Firebase'den veri alınırken hata oluştu: $e");
+      print("Error fetching documents: $e");
     }
 
     setState(() {
@@ -132,14 +164,14 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
   @override
   Widget build(BuildContext context) {
-    print("build method is called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print("widget.userKey: ${widget.userKey}");
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ana Başlıkları Düzenle'),
+        title: const Text('Itemları düzenle'),
         automaticallyImplyLeading: false,
         actions: [
           ElevatedButton(
@@ -155,7 +187,10 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Çıkış Yap',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -175,11 +210,24 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                         mainAxisSpacing: 16, // Yatay boşluk
                         childAspectRatio: 3, // Kartın yüksekliği
                       ),
-                      itemCount: _mainHeaders.length,
+                      itemCount: _items.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            print("Tıklandı");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditSubHeader(
+                                        companyName: widget.companyName,
+                                        digitalMenuAddress: widget.digitalMenuAddress,
+                                        mailAddress: widget.mailAddress,
+                                        menuLanguage: widget.menuLanguage,
+                                        menuMoneyCurrency: widget.menuMoneyCurrency,
+                                        phoneNumber: widget.phoneNumber,
+                                        itemName: _items[index].itemName,
+                                        userKey: widget.userKey,
+                                      )),
+                            );
                           },
                           child: Card(
                             elevation: 4,
@@ -196,7 +244,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          _mainHeaders[index].mainHeaderName,
+                                          _items[index].itemName,
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -214,7 +262,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                               return AlertDialog(
                                                 title: const Text('Onayla'),
                                                 content: Text(
-                                                  "${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir.",
+                                                  "${_items[index].itemName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir.",
                                                 ),
                                                 actions: [
                                                   TextButton(
@@ -226,7 +274,8 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                                   TextButton(
                                                     onPressed: () {
                                                       Navigator.of(context).pop();
-                                                      _removeMainHeader(_mainHeaders[index], _mainHeaders);
+                                                      _removeItem(_items[index], _items);
+
                                                       setState(() {});
                                                     },
                                                     child: const Text('Devam et'),
@@ -239,19 +288,53 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                       ),
                                     ],
                                   ),
-                                  const Spacer(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(_items[index].explanation.isNotEmpty ? _items[index].explanation : "Açıklama yok"),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(
+                                        _items[index].price != 0 ? "price: ${_items[index].price}" : "price is not set",
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
                                   Row(
                                     children: [
                                       Icon(
-                                        _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
-                                        color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
+                                        _items[index].disable ? Icons.visibility_off : Icons.visibility,
+                                        color: _items[index].disable ? Colors.grey : Colors.blueAccent,
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          _mainHeaders[index].disable ? "Görünür" : "Gizli",
+                                          _items[index].disable ? "Gizli" : "Görünür",
                                           style: TextStyle(
-                                            color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
+                                            color: _items[index].disable ? Colors.grey : Colors.blueAccent,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      // yeni eklenen
+                                      Icon(
+                                        _items[index].blur ? Icons.lightbulb_outlined : Icons.lightbulb_outline,
+                                        color: _items[index].blur ? Colors.grey : Colors.blueAccent,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          _items[index].blur ? "Blurlu" : "Blursuz",
+                                          style: TextStyle(
+                                            color: _items[index].blur ? Colors.grey : Colors.blueAccent,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -285,29 +368,39 @@ class _EditMainHeaderState extends State<EditMainHeader> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton.extended(
+            heroTag: "itemHeroTag",
             onPressed: () {
               showDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (context) {
-                  return AddMainHeaderDialog(
-                    mainHeaders: _mainHeaders,
-                    userId: _userId,
+                  // aaaaaaaaaaaaaaaaaa
+                  return AddItemDialog(
+                    mainHeaderName: widget.mainHeaderName,
+                    items: _items,
+                    userId: widget.userKey,
                   );
                 },
               ).then((result) {
                 if (result != null) {
                   bool disableStatus = result['disableStatus'];
+                  bool blurStatus = result['blurStatus'];
+                  double newPrice = result['newPrice'];
                   int maxOrder = result['maxOrder'];
-                  String newMainHeaderName = result['newMainHeaderName'];
+                  String newItemName = result['newItemName'];
+                  String newExplanation = result['newExplanation'];
 
                   setState(() {
-                    _mainHeaders.add(
-                      MainHeader(
-                        mainHeaderName: newMainHeaderName,
+                    _items.add(
+                      Item(
+                        itemName: newItemName,
                         order: maxOrder,
                         disable: disableStatus,
+                        blur: blurStatus,
+                        explanation: newExplanation,
+                        price: newPrice,
                         imageUrl: "",
+                        docId: "${widget.mainHeaderName}_$newItemName",
                       ),
                     );
                   });
@@ -324,15 +417,17 @@ class _EditMainHeaderState extends State<EditMainHeader> {
               bool result = await showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => ReOrder(
-                  mainHeaders: _mainHeaders,
-                  userId: _userId,
+                // burası modify edildi
+                builder: (context) => ReOrderItems(
+                  items: _items,
+                  userId: widget.userKey,
+                  mainHeaderName: widget.mainHeaderName,
                 ),
               );
 
               if (result == true) {
                 setState(() {
-                  _mainHeaders.sort((a, b) => a.order.compareTo(b.order));
+                  _items.sort((a, b) => a.order.compareTo(b.order));
                 });
               }
             },

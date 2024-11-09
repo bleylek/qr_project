@@ -20,36 +20,38 @@ class MainHeader {
 class Item {
   Item({
     // key == itemName
+    required this.docId,
     required this.itemName, // Türk Kahvesi
     required this.order, // order no
     // imageUrl: null == ""
     this.imageUrl = "", // image url
     // price: null == -5
-    required this.price, // price
+    this.price, // price
     required this.disable, // show or not
     required this.blur, // blur or not
     required this.explanation, // explanation
   });
 
-  final String itemName;
-  final int order;
-  final String imageUrl;
-  final double price;
-  final bool disable;
-  final bool blur;
-  final String explanation;
+  String docId;
+  String itemName;
+  int order;
+  String imageUrl;
+  double? price;
+  bool disable;
+  bool blur;
+  String explanation;
 }
 
 class SubHeader {
-  const SubHeader({
+  SubHeader({
     // key == subHeaderName
     required this.subHeaderName, // Sütlü
     required this.order, // order no
     // girmediği takdirde price -5 olacak
-    this.price = -5,
+    this.price,
   });
 
-  final String subHeaderName;
-  final int order;
-  final double price;
+  String subHeaderName;
+  int order;
+  double? price;
 }

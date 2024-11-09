@@ -1,42 +1,61 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qrproject/models/firebase_fetch_model.dart';
-import 'package:qrproject/pages/edit_item.dart';
 import 'package:qrproject/services/auth_service.dart';
-import 'package:qrproject/widgets/add_main_header_dialog.dart';
-import 'package:qrproject/widgets/re_order.dart';
+import 'package:qrproject/widgets/add_item_dialog.dart';
+import 'package:qrproject/widgets/add_sub_header_dialog.dart';
+import 'package:qrproject/widgets/re_order_items.dart';
+import 'package:qrproject/widgets/re_order_sub_headers.dart';
 
-class EditMainHeader extends StatefulWidget {
-  // userKey'i alıyoruz burda. Fakat edit_item'a _userId'yi göndereceğiz. Parametre olarak
-  const EditMainHeader({
+class EditSubHeader extends StatefulWidget {
+  const EditSubHeader({
     super.key,
     required this.userKey,
+    required this.itemName,
+    required this.digitalMenuAddress,
+    required this.companyName,
+    required this.mailAddress,
+    required this.phoneNumber,
+    required this.menuLanguage,
+    required this.menuMoneyCurrency,
   });
 
   final String userKey;
+  final String itemName;
+  final String digitalMenuAddress;
+  final String companyName;
+  final String mailAddress;
+  final String phoneNumber;
+  final String menuLanguage;
+  final String menuMoneyCurrency;
 
   @override
-  State<EditMainHeader> createState() => _EditMainHeaderState();
+  State<EditSubHeader> createState() => _EditSubHeader();
 }
 
-class _EditMainHeaderState extends State<EditMainHeader> {
-  final List<MainHeader> _mainHeaders = [];
-  String _digitalMenuAddress = "";
-  String _userId = "";
-  String _companyName = "";
-  String _mailAddress = "";
-  String _phoneNumber = "";
-  String _menuLanguage = "";
-  String _menuMoneyCurrency = "";
+class _EditSubHeader extends State<EditSubHeader> {
+  final List<SubHeader> _subHeaders = [];
+
   bool isLoading = true;
 
+  // burası ile ilgilendim
   @override
   void initState() {
+    print("edit_item initState içerisinde_______________");
+    print("userKey: ${widget.userKey}");
+    print("itemName: ${widget.itemName}");
+    print("digitalMenuAddress: ${widget.digitalMenuAddress}");
+    print("companyName: ${widget.companyName}");
+    print("mailAddress: ${widget.mailAddress}");
+    print("phoneNumber: ${widget.phoneNumber}");
+    print("menuLanguage: ${widget.menuLanguage}");
+    print("menuMoneyCurrency: ${widget.menuMoneyCurrency}");
     super.initState();
     _loadData();
   }
 
   void _removeMainHeader(MainHeader mainHeader, List<MainHeader> mainHeaders) async {
+    /*
     setState(() {
       isLoading = true;
     });
@@ -60,64 +79,6 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
       await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("MainHeaders").doc(mainHeader.mainHeaderName).delete();
 
-      // burda senden yapmanı istediğim FirebaseFirestore.instance.collection('Users').doc(_userId).collection("Items").doc(...) koleksiyonunda
-
-      // bağlı itemları sil
-      final itemsSnapshot = await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("Items").get();
-
-      List<String> itemNames = [];
-      for (var doc in itemsSnapshot.docs) {
-        final docId = doc.id;
-        final underscoreIndex = docId.indexOf("_");
-
-        // mainHeaderName
-        final String beforeUnderscore = docId.substring(0, underscoreIndex);
-
-        // itemName
-        final String afterUnderscore = docId.substring(underscoreIndex + 1);
-
-        if (underscoreIndex != -1 && beforeUnderscore == mainHeader.mainHeaderName) {
-          itemNames.add(afterUnderscore);
-          await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("Items").doc(docId).delete();
-        }
-      }
-
-      // bağlı subHeaderları sil
-      final subHeadersSnapshot = await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("SubHeaders").get();
-
-      for (var doc in subHeadersSnapshot.docs) {
-        final docId = doc.id;
-        final underscoreIndex = docId.indexOf("_");
-
-        // itemName
-        final String beforeUnderscore = docId.substring(0, underscoreIndex);
-
-        // subHeaderName
-        final String afterUnderscore = docId.substring(underscoreIndex + 1);
-
-        if (underscoreIndex != -1) {
-          if (itemNames.contains(beforeUnderscore)) {
-            await FirebaseFirestore.instance.collection('Users').doc(_userId).collection("SubHeaders").doc(docId).delete();
-          }
-        }
-      }
-      /*
-      final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
-
-    for (var doc in querySnapshot.docs) {
-      final docId = doc.id;
-      final underscoreIndex = docId.indexOf('_');
-
-      if (underscoreIndex != -1) {
-        final afterUnderscore = docId.substring(underscoreIndex + 1);
-        if (afterUnderscore == widget.userKey) {
-          _digitalMenuAddress = docId.substring(0, underscoreIndex);
-          _userId = "${_digitalMenuAddress}_${widget.userKey}";
-        }
-      }
-    }
-      */
-
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${mainHeader.mainHeaderName} başarıyla silindi')),
@@ -131,61 +92,49 @@ class _EditMainHeaderState extends State<EditMainHeader> {
         isLoading = false;
       });
     }
+    */
   }
 
   Future<void> _loadData() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
-
-    for (var doc in querySnapshot.docs) {
-      final docId = doc.id;
-      final underscoreIndex = docId.indexOf('_');
-
-      if (underscoreIndex != -1) {
-        final afterUnderscore = docId.substring(underscoreIndex + 1);
-        if (afterUnderscore == widget.userKey) {
-          _digitalMenuAddress = docId.substring(0, underscoreIndex);
-          _userId = "${_digitalMenuAddress}_${widget.userKey}";
-        }
-      }
-    }
-
-    final usersCollection = FirebaseFirestore.instance.collection('Users').doc(_userId);
+    final itemsCollection = FirebaseFirestore.instance.collection("Users").doc(widget.userKey).collection("SubHeaders");
 
     try {
-      final docSnapshot = await usersCollection.get();
+      final querySnapshot = await itemsCollection.get();
+      for (var doc in querySnapshot.docs) {
+        String docName = doc.id;
 
-      if (docSnapshot.exists) {
-        final data = docSnapshot.data();
-        _companyName = data?['CompanyName'] ?? "";
-        _mailAddress = data?['MailAddress'] ?? "";
-        _phoneNumber = data?['PhoneNumber'] ?? "";
-        _menuLanguage = data?['MenuLanguage'] ?? "";
-        _menuMoneyCurrency = data?['MenuMoneyCurrency'] ?? "";
-
-        final mainHeadersCollection = usersCollection.collection("MainHeaders");
-        final mainHeadersSnapshot = await mainHeadersCollection.get();
-
-        for (var doc in mainHeadersSnapshot.docs) {
+        if (docName.split('_').first == widget.itemName) {
           final data = doc.data();
-          bool disable = data['disable'] ?? false;
-          String imageUrl = data['imageUrl'] ?? "";
-          int order = data['order'] ?? 0;
 
-          _mainHeaders.add(
-            MainHeader(
-              mainHeaderName: doc.id,
+          String subHeaderName = docName.split('_').skip(1).join('_');
+          int order = data['order'] ?? 0;
+          double price = (data['price'] as num).toDouble();
+
+          _subHeaders.add(
+            SubHeader(
+              subHeaderName: subHeaderName,
               order: order,
-              disable: disable,
-              imageUrl: imageUrl,
+              price: price,
             ),
           );
         }
-        _mainHeaders.sort((a, b) => a.order.compareTo(b.order));
-      } else {
-        print("Belirtilen kullanıcı bulunamadı.");
       }
+
+      _subHeaders.sort((a, b) => a.order.compareTo(b.order));
+      /*
+      for (Item item in _items) {
+        print("____________________item_________________________");
+        print("ItemName ${item.itemName}");
+        print("order ${item.order}");
+        print("disable ${item.disable}");
+        print("blur ${item.blur}");
+        print("explanation ${item.explanation}");
+        print("imageUrl ${item.imageUrl}");
+        print("price ${item.price}");
+      }
+      */
     } catch (e) {
-      print("Firebase'den veri alınırken hata oluştu: $e");
+      print("Error fetching documents: $e");
     }
 
     setState(() {
@@ -195,13 +144,14 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
   @override
   Widget build(BuildContext context) {
+    print("widget.userKey: ${widget.userKey}");
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ana Başlıkları Düzenle'),
+        title: const Text('SubHeaderları düzenle'),
         automaticallyImplyLeading: false,
         actions: [
           ElevatedButton(
@@ -217,7 +167,10 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Çıkış Yap',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -237,25 +190,11 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                         mainAxisSpacing: 16, // Yatay boşluk
                         childAspectRatio: 3, // Kartın yüksekliği
                       ),
-                      itemCount: _mainHeaders.length,
+                      itemCount: _subHeaders.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditItem(
-                                  userKey: _userId,
-                                  mainHeaderName: _mainHeaders[index].mainHeaderName,
-                                  companyName: _companyName,
-                                  digitalMenuAddress: _digitalMenuAddress,
-                                  mailAddress: _mailAddress,
-                                  menuLanguage: _menuLanguage,
-                                  menuMoneyCurrency: _menuMoneyCurrency,
-                                  phoneNumber: _phoneNumber,
-                                ),
-                              ),
-                            );
+                            print("Tıklandı");
                           },
                           child: Card(
                             elevation: 4,
@@ -272,7 +211,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          _mainHeaders[index].mainHeaderName,
+                                          _subHeaders[index].subHeaderName,
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -290,7 +229,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                               return AlertDialog(
                                                 title: const Text('Onayla'),
                                                 content: Text(
-                                                  "${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir.",
+                                                  "${_subHeaders[index].subHeaderName}'ı silmek istediğinize emin misiniz?",
                                                 ),
                                                 actions: [
                                                   TextButton(
@@ -301,8 +240,11 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
+                                                      //  BURASI DEĞİŞECEK
+                                                      /*
                                                       Navigator.of(context).pop();
                                                       _removeMainHeader(_mainHeaders[index], _mainHeaders);
+                                                      */
                                                       setState(() {});
                                                     },
                                                     child: const Text('Devam et'),
@@ -315,24 +257,18 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                                       ),
                                     ],
                                   ),
-                                  const Spacer(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
                                   Row(
                                     children: [
-                                      Icon(
-                                        _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
-                                        color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          _mainHeaders[index].disable ? "Görünür" : "Gizli",
-                                          style: TextStyle(
-                                            color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
+                                      Text(
+                                        _subHeaders[index].price != 0 ? "price: ${_subHeaders[index].price}" : "price is not set",
+                                      )
                                     ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
                                 ],
                               ),
@@ -361,30 +297,27 @@ class _EditMainHeaderState extends State<EditMainHeader> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton.extended(
-            heroTag: "mainHeaderHeroTag",
+            heroTag: "subheaderHeroTag",
             onPressed: () {
               showDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (context) {
-                  return AddMainHeaderDialog(
-                    mainHeaders: _mainHeaders,
-                    userId: _userId,
-                  );
+                  // aaaaaaaaaaaaaaaaaa
+                  return AddSubHeaderDialog(subHeaders: _subHeaders, userId: widget.userKey, itemName: widget.itemName);
                 },
               ).then((result) {
                 if (result != null) {
-                  bool disableStatus = result['disableStatus'];
+                  double newPrice = result['newPrice'];
                   int maxOrder = result['maxOrder'];
-                  String newMainHeaderName = result['newMainHeaderName'];
+                  String newSubHeaderName = result['newSubHeaderName'];
 
                   setState(() {
-                    _mainHeaders.add(
-                      MainHeader(
-                        mainHeaderName: newMainHeaderName,
+                    _subHeaders.add(
+                      SubHeader(
+                        subHeaderName: newSubHeaderName,
                         order: maxOrder,
-                        disable: disableStatus,
-                        imageUrl: "",
+                        price: newPrice,
                       ),
                     );
                   });
@@ -401,15 +334,17 @@ class _EditMainHeaderState extends State<EditMainHeader> {
               bool result = await showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => ReOrder(
-                  mainHeaders: _mainHeaders,
-                  userId: _userId,
+                // burası modify edildi
+                builder: (context) => ReOrderSubHeaders(
+                  subHeaders: _subHeaders,
+                  userId: widget.userKey,
+                  itemName: widget.itemName,
                 ),
               );
 
               if (result == true) {
                 setState(() {
-                  _mainHeaders.sort((a, b) => a.order.compareTo(b.order));
+                  _subHeaders.sort((a, b) => a.order.compareTo(b.order));
                 });
               }
             },
