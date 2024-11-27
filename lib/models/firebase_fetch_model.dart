@@ -1,5 +1,8 @@
 // Kahveler
 
+import 'dart:io';
+import 'dart:typed_data';
+
 class MainHeader {
   MainHeader({
     // key == mainHeaderName
@@ -8,12 +11,16 @@ class MainHeader {
     // imageUrl: null == ""
     this.imageUrl = "", // image url
     required this.disable, // show or not
+    this.webImage,
+    this.mobileImage,
   });
 
   String mainHeaderName;
   int order;
   String imageUrl;
   bool disable;
+  Uint8List? webImage;
+  File? mobileImage;
 }
 
 // Türk Kahvesi
@@ -30,6 +37,7 @@ class Item {
     required this.disable, // show or not
     required this.blur, // blur or not
     required this.explanation, // explanation
+    this.image,
   });
 
   String docId;
@@ -40,6 +48,7 @@ class Item {
   bool disable;
   bool blur;
   String explanation;
+  Uint8List? image;
 }
 
 class SubHeader {

@@ -31,6 +31,28 @@
 
   <title>qrproject</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Firebase Configuration -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
+  <!-- Add other Firebase services you need, e.g., Firebase Storage -->
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_BjuZMX3Kr1rUvcIM6uxkRVBV8pXL3U4",
+      authDomain: "qr-project-7f885.firebaseapp.com",
+      projectId: "qr-project-7f885",
+      storageBucket: "qr-project-7f885.firebasestorage.app",
+      messagingSenderId: "664669335812",
+      appId: "1:664669335812:web:9c7637db5735b8814d2051",
+      measurementId: "G-8WD732VVB0"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const analytics = firebase.getAnalytics(app);
+  </script>
+
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qrproject/models/firebase_fetch_model.dart';
+import 'package:qrproject/pages/deneme_sayfasi.dart';
 import 'package:qrproject/pages/edit_item.dart';
 import 'package:qrproject/services/auth_service.dart';
 import 'package:qrproject/widgets/add_main_header_dialog.dart';
 import 'package:qrproject/widgets/re_order.dart';
+import 'package:http/http.dart' as http;
 
 class EditMainHeader extends StatefulWidget {
   // userKey'i alıyoruz burda. Fakat edit_item'a _userId'yi göndereceğiz. Parametre olarak
@@ -34,6 +38,24 @@ class _EditMainHeaderState extends State<EditMainHeader> {
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  Future<Uint8List?> fetchFileFromUrl(String imageUrl) async {
+    try {
+      // HTTP GET isteği yap
+      final response = await http.get(Uri.parse(imageUrl));
+
+      // Yanıt başarılı ise Uint8List döndür
+      if (response.statusCode == 200) {
+        return response.bodyBytes; // Dosya verisi Uint8List formatında döner
+      } else {
+        debugPrint("Failed to fetch file. Status code: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      debugPrint("Error fetching file: $e");
+      return null;
+    }
   }
 
   void _removeMainHeader(MainHeader mainHeader, List<MainHeader> mainHeaders) async {
@@ -171,14 +193,51 @@ class _EditMainHeaderState extends State<EditMainHeader> {
           String imageUrl = data['imageUrl'] ?? "";
           int order = data['order'] ?? 0;
 
-          _mainHeaders.add(
-            MainHeader(
-              mainHeaderName: doc.id,
-              order: order,
-              disable: disable,
-              imageUrl: imageUrl,
-            ),
-          );
+          // if it is in web browser
+          if (kIsWeb) {
+            // if no image to show
+            if (imageUrl == " ") {
+              _mainHeaders.add(
+                MainHeader(
+                  mainHeaderName: doc.id,
+                  order: order,
+                  disable: disable,
+                  imageUrl: imageUrl,
+                ),
+              );
+            }
+            // if there is image to show
+            else {
+              //
+              Uint8List? currentImage = await fetchFileFromUrl(imageUrl);
+
+              // normalde bu kısımda currentImage'ın null olma ihtimali yok. Fakat firebase bağlantı sorunu olması durumunda ola ki resmi storage'dan çekemezsek diye bu if-else statementını ekledim
+              if (currentImage == null) {
+                _mainHeaders.add(
+                  MainHeader(
+                    mainHeaderName: doc.id,
+                    order: order,
+                    disable: disable,
+                    imageUrl: imageUrl,
+                  ),
+                );
+              } else {
+                _mainHeaders.add(
+                  MainHeader(
+                    mainHeaderName: doc.id,
+                    order: order,
+                    disable: disable,
+                    imageUrl: imageUrl,
+                    webImage: currentImage,
+                  ),
+                );
+              }
+            }
+          }
+          // if it is mobile
+          else {
+            //
+          }
         }
         _mainHeaders.sort((a, b) => a.order.compareTo(b.order));
       } else {
@@ -195,6 +254,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
 
   @override
   Widget build(BuildContext context) {
+    print(_userId);
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -240,105 +300,167 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                       itemCount: _mainHeaders.length,
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditItem(
-                                  userKey: _userId,
-                                  mainHeaderName: _mainHeaders[index].mainHeaderName,
-                                  companyName: _companyName,
-                                  digitalMenuAddress: _digitalMenuAddress,
-                                  mailAddress: _mailAddress,
-                                  menuLanguage: _menuLanguage,
-                                  menuMoneyCurrency: _menuMoneyCurrency,
-                                  phoneNumber: _phoneNumber,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditItem(
+                                    userKey: _userId,
+                                    mainHeaderName: _mainHeaders[index].mainHeaderName,
+                                    companyName: _companyName,
+                                    digitalMenuAddress: _digitalMenuAddress,
+                                    mailAddress: _mailAddress,
+                                    menuLanguage: _menuLanguage,
+                                    menuMoneyCurrency: _menuMoneyCurrency,
+                                    phoneNumber: _phoneNumber,
+                                  ),
                                 ),
+                              );
+                            },
+                            child: Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            );
-                          },
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Stack(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          _mainHeaders[index].mainHeaderName,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                  // İçerik
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Sol tarafta resim
+                                        ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150, // Resim genişliği
+                                            maxHeight: 150, // Resim yüksekliği
                                           ),
-                                          overflow: TextOverflow.ellipsis,
+                                          child: Builder(
+                                            builder: (context) {
+                                              // in web browser
+                                              if (kIsWeb) {
+                                                // no image to display
+                                                if (_mainHeaders[index].webImage == null) {
+                                                  return Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    color: Colors.grey,
+                                                    child: const Icon(Icons.image, color: Colors.white),
+                                                  );
+                                                }
+                                                // image to display
+                                                else {
+                                                  return Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: Colors.grey, // Kenarlık rengi
+                                                        width: 2.0, // Kenarlık kalınlığı
+                                                      ),
+                                                      borderRadius: BorderRadius.circular(8), // Kenarlığın köşelerini yuvarlama
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8), // İçeriğin köşe yuvarlaklığı
+                                                      child: Image.memory(
+                                                        _mainHeaders[index].webImage!,
+                                                        width: 150,
+                                                        height: 150,
+                                                        fit: BoxFit.contain, // Resmi tam olarak doldur
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              } else {
+                                                return Text("data");
+                                              }
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.close, color: Colors.redAccent),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: const Text('Onayla'),
-                                                content: Text(
-                                                  "${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir.",
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    child: const Text('İptal'),
+                                        const SizedBox(width: 12), // Resim ve metin arası boşluk
+                                        // Sağ tarafta metin
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Main Header Name
+                                              Padding(
+                                                padding: const EdgeInsets.only(right: 40), // Çarpı işareti için boşluk
+                                                child: Text(
+                                                  _mainHeaders[index].mainHeaderName,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                      _removeMainHeader(_mainHeaders[index], _mainHeaders);
-                                                      setState(() {});
-                                                    },
-                                                    child: const Text('Devam et'),
+                                                  overflow: TextOverflow.visible,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8), // Alt metin için boşluk
+                                              // Visibility and Status
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
+                                                    color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    _mainHeaders[index].disable ? "Görünür" : "Gizli",
+                                                    style: TextStyle(
+                                                      color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
                                                   ),
                                                 ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        _mainHeaders[index].disable ? Icons.visibility : Icons.visibility_off,
-                                        color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          _mainHeaders[index].disable ? "Görünür" : "Gizli",
-                                          style: TextStyle(
-                                            color: _mainHeaders[index].disable ? Colors.blueAccent : Colors.grey,
-                                            fontWeight: FontWeight.w500,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                  ),
+                                  // Sağ üst köşede çarpı simgesi
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.close, color: Colors.redAccent),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Onayla'),
+                                              content: Text(
+                                                "${_mainHeaders[index].mainHeaderName}'ı silmek istediğinize emin misiniz? Bu ona bağlı itemları da silecektir.",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('İptal'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    _removeMainHeader(_mainHeaders[index], _mainHeaders);
+                                                    setState(() {});
+                                                  },
+                                                  child: const Text('Devam et'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                        );
+                            ));
                       },
                     ),
                   ),
@@ -374,20 +496,35 @@ class _EditMainHeaderState extends State<EditMainHeader> {
                 },
               ).then((result) {
                 if (result != null) {
-                  bool disableStatus = result['disableStatus'];
-                  int maxOrder = result['maxOrder'];
-                  String newMainHeaderName = result['newMainHeaderName'];
+                  // in web browser
+                  if (kIsWeb) {
+                    print("result['imageUrl']: ${result['imageUrl']}");
+                    bool disableStatus = result['disableStatus'];
+                    int maxOrder = result['maxOrder'];
+                    String newMainHeaderName = result['newMainHeaderName'];
+                    Uint8List? newlyAddedWebImage = result['newlyAddedImageWeb'];
+                    String imageUrl = result['imageUrl'];
 
-                  setState(() {
-                    _mainHeaders.add(
-                      MainHeader(
-                        mainHeaderName: newMainHeaderName,
-                        order: maxOrder,
-                        disable: disableStatus,
-                        imageUrl: "",
-                      ),
-                    );
-                  });
+                    setState(() {
+                      _mainHeaders.add(
+                        MainHeader(
+                          mainHeaderName: newMainHeaderName,
+                          order: maxOrder,
+                          disable: disableStatus,
+                          webImage: newlyAddedWebImage,
+                          imageUrl: imageUrl,
+                        ),
+                      );
+                    });
+                  } else {
+                    // eğer mobilde ise
+                    /*
+                    bool disableStatus = result['disableStatus'];
+                    int maxOrder = result['maxOrder'];
+                    String newMainHeaderName = result['newMainHeaderName'];
+                    File? mobileImage;
+                    */
+                  }
                 }
               });
             },
@@ -397,6 +534,7 @@ class _EditMainHeaderState extends State<EditMainHeader> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton.extended(
+            heroTag: "order",
             onPressed: () async {
               bool result = await showDialog(
                 barrierDismissible: false,
@@ -415,6 +553,20 @@ class _EditMainHeaderState extends State<EditMainHeader> {
             },
             icon: const Icon(Icons.reorder),
             label: const Text("Sırayı Düzenle"),
+            backgroundColor: Colors.blueAccent,
+          ),
+          FloatingActionButton.extended(
+            heroTag: "denemePage",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ImageUploadPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.train),
+            label: const Text("Deneme Sayfası"),
             backgroundColor: Colors.blueAccent,
           ),
         ],
